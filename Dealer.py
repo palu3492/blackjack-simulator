@@ -6,6 +6,13 @@ class Dealer:
         self.hand = []
         self.show_whole_hand = False
 
+    # Give 2 cards to each player and the dealer
+    def deal_cards(self, players):
+        for i in range(2):
+            for player in players:
+                self.deal_card_to_palyer(player)
+            self.deal_card_to_dealer()
+
     def deal_card_to_palyer(self, player):
         player.add_card_to_hand(self.shoe.remove_card())
 

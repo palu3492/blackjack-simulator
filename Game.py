@@ -26,13 +26,6 @@ dealer = Dealer(shoe)
 for player_count in range(number_of_players):
     players.append(Player())
 
-# Gives 2 cards to each player and the dealer
-def deal_cards_to_players():
-    for i in range(2):
-        for player in players:
-            dealer.deal_card_to_palyer(player)
-            dealer.deal_card_to_dealer()
-
 def game_over():
     #add player and dealer hands to discard pile
     #clear player
@@ -43,8 +36,7 @@ def game_over():
 #start_time = time.time()
 for game in range(number_of_games):
 
-    #Game is setup now and all players have there cards (including dealer)
-    deal_cards_to_players()
+    dealer.deal_cards(players)
 
     # This is where all the players make their decisions about the game
     for player in players:

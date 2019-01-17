@@ -6,7 +6,7 @@ class Deck:
     names = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "10", "Jack", "Queen", "King"]
 
     def __init__(self):
-        self.deck = []
+        self.cards = []
         self.fill_deck()
 
     def fill_deck(self):
@@ -17,22 +17,22 @@ class Deck:
                 else:
                     value = real_value
                 card = Card(suit, value, real_value, Deck.names[real_value-1])
-                self.deck.append(card)
+                self.cards.append(card)
 
     def get_deck(self):
-        return self.deck
+        return self.cards
 
     def set_deck(self, cards):
-        self.deck = cards
+        self.cards = cards
 
     def add_card(self, card):
-        self.deck.append(card)
+        self.cards.append(card)
 
     def clear_deck(self):
-        self.deck.clear()
+        self.cards.clear()
 
     def to_string(self):
         string = ""
-        for card in self.deck:
+        for card in self.cards:
             string += str(card.get_value())+","
         return string[:len(string)-1]
