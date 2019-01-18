@@ -53,6 +53,9 @@ class Dealer:
             return self.hand
         return self.hand[:1]
 
+    def get_up_card(self):
+        return self.hand[0]
+
     def pop_hand(self):
         hand = self.hand
         self.hand = []

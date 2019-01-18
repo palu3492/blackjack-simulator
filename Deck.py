@@ -2,12 +2,12 @@ from Card import Card
 
 class Deck:
 
-    names = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "10", "Jack", "Queen", "King"]
-
     def __init__(self):
         self.cards = []
+        self.names = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "10", "Jack", "Queen", "King"]
         self.fill_deck()
 
+    # Add all 54 cards to deck
     def fill_deck(self):
         for suit in ["Hearts", "Spades", "Diamonds", "Clubs"]:
             for real_value in range(1, 14):
@@ -15,7 +15,7 @@ class Deck:
                     value = 10
                 else:
                     value = real_value
-                card = Card(suit, value, real_value, Deck.names[real_value-1])
+                card = Card(suit, value, real_value, self.names[real_value-1])
                 self.cards.append(card)
 
     def get_deck(self):
