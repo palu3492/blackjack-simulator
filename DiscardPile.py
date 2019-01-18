@@ -10,7 +10,7 @@ class DiscardPile:
     def add_cards(self, cards):
         self.cards += cards
 
-    def get_discard_pile(self):
+    def get_cards(self):
         return self.cards
 
     def clear(self):

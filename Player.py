@@ -6,9 +6,11 @@ class Player:
 
     def __init__(self):
         self.hand = []
+        self.hand_total = 0
         self.bust = False
 
     def add_card_to_hand(self, card):
+        self.hand_total += card.get_value()
         self.hand.append(card)
 
     def hand_to_string(self):
@@ -27,16 +29,21 @@ class Player:
             return "H"
 
     def get_hand_total(self):
-        total = 0
-        for card in self.hand:
-            total += card.get_value()
-        return total
+        return self.hand_total
 
     def is_bust(self):
         return self.bust
+
+    def reset_bust(self):
+        self.bust = False
 
     def set_hand(self, hand):
         self.hand = hand
 
     def get_hand(self):
         return self.hand
+
+    def pop_hand(self):
+        hand = self.hand
+        self.hand = []
+        return hand

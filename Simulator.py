@@ -1,5 +1,4 @@
 from Deck import Deck
-from Card import Card
 from Dealer import Dealer
 from Player import Player
 from Shoe import Shoe
@@ -7,54 +6,57 @@ from DiscardPile import DiscardPile
 import time
 
 number_of_games = 100000
-number_of_players = 1
+games_played = 0
+number_of_players = 4
 players = []
-number_of_decks = 1
-shoe = Shoe()
+number_of_decks = 6
+shoe = Shoe(number_of_decks)
 discard_pile = DiscardPile()
 
 # Add each deck to the shoe
 for deck_count in range(number_of_decks):
     shoe.add_deck(Deck())
-shoe.shuffle()
 # Shuffle shoe or decks?
+shoe.shuffle()
 
 # Create dealer and give them the shoe
-dealer = Dealer(shoe)
+dealer = Dealer(shoe, discard_pile)
 
 # Add each player to game (add to players list)
 for player_count in range(number_of_players):
     players.append(Player())
 
 def game_over():
-    # Add player hand to discard pile
-    # clear player
+    # Discard all hands
+    dealer.discard_hands(players)
     for player in players:
-        discard_pile.add_cards(player.get_hand())
-        player.set_hand([])
-    # clear dealer
-    # add dealers cards to discard pile
+        player.reset_bust()
 
-# start_time = time.time()
+start_time = time.time()
 for game in range(number_of_games):
     # Deal out the cards
     dealer.deal_cards(players)
     # All the players and dealer make their plays
-    # for player in players:
-    #     player_move = ""
-    #     if not player.is_bust() or player_move != "S":
-    #         player_move = player.make_move(dealer.get_hand())
-    #         if player_move == "S":
-    #             pass
-    #         else:
-    #             player.add_card_to_hand(dealer.deal_card_to_palyer(player))
+    for player in players:
+        player_move = "H"
+        while player_move != "S" and not player.is_bust():
+            player_move = player.make_move(dealer.get_hand())
+            if player_move == "H":
+                dealer.deal_card_to_player(player)
+            elif player_move == "D":
+                pass
+            elif player_move == "Sp":
+                pass
+
+    # games_played += 1
+    # print(games_played)
 
 
-    # game_over()
+    game_over()
 
 
-#end_time = time.time()
-#print(end_time - start_time)
+end_time = time.time()
+print(end_time - start_time)
 
 
 #if players first two cards are ace and facecard then blackjack and dealer does not have blackjack then player gets 1.5 bet
