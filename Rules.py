@@ -3,7 +3,7 @@ class Rules:
 
     def __init__(self):
         rules_set = {}
-        self.read_rules_file()
+        # self.read_rules_file()
 
     def read_rules_file(self):
         file = open("rules.csv", "r")

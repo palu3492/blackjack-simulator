@@ -1,4 +1,3 @@
-import random
 from Card import Card
 
 class Deck:
@@ -22,17 +21,17 @@ class Deck:
     def get_deck(self):
         return self.cards
 
-    def set_deck(self, cards):
-        self.cards = cards
-
-    def add_card(self, card):
-        self.cards.append(card)
-
-    def clear_deck(self):
-        self.cards.clear()
-
-    def to_string(self):
-        string = ""
-        for card in self.cards:
-            string += str(card.get_value())+","
-        return string[:len(string)-1]
+    # def set_deck(self, cards):
+    #     self.cards = cards
+    #
+    # def add_card(self, card):
+    #     self.cards.append(card)
+    #
+    # def clear_deck(self):
+    #     self.cards.clear()
+    #
+    # def to_string(self):
+    #     string = ""
+    #     for card in self.cards:
+    #         string += str(card.get_value())+","
+    #     return string[:len(string)-1]

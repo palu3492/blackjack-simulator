@@ -11,13 +11,13 @@ number_of_players = 1
 players = []
 number_of_decks = 1
 shoe = Shoe()
-number_of_cards = 52 * number_of_decks
 discard_pile = DiscardPile()
 
 # Add each deck to the shoe
 for deck_count in range(number_of_decks):
     shoe.add_deck(Deck())
 shoe.shuffle()
+# Shuffle shoe or decks?
 
 # Create dealer and give them the shoe
 dealer = Dealer(shoe)
@@ -27,30 +27,30 @@ for player_count in range(number_of_players):
     players.append(Player())
 
 def game_over():
-    #add player and dealer hands to discard pile
-    #clear player
+    # Add player hand to discard pile
+    # clear player
     for player in players:
         discard_pile.add_cards(player.get_hand())
         player.set_hand([])
+    # clear dealer
+    # add dealers cards to discard pile
 
-#start_time = time.time()
+# start_time = time.time()
 for game in range(number_of_games):
-
+    # Deal out the cards
     dealer.deal_cards(players)
-
-    # This is where all the players make their decisions about the game
-    for player in players:
-        player_move = ""
-        if not player.is_bust() or player_move != "S":
-            player_move = player.make_move(dealer.get_hand())
-            if player_move == "S":
-                pass
-            else:
-                player.add_card_to_hand(dealer.deal_card_to_palyer(player))
-
+    # All the players and dealer make their plays
+    # for player in players:
+    #     player_move = ""
+    #     if not player.is_bust() or player_move != "S":
+    #         player_move = player.make_move(dealer.get_hand())
+    #         if player_move == "S":
+    #             pass
+    #         else:
+    #             player.add_card_to_hand(dealer.deal_card_to_palyer(player))
 
 
-    game_over()
+    # game_over()
 
 
 #end_time = time.time()

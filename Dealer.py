@@ -10,14 +10,18 @@ class Dealer:
     def deal_cards(self, players):
         for i in range(2):
             for player in players:
-                self.deal_card_to_palyer(player)
+                self.deal_card_to_player(player)
             self.deal_card_to_dealer()
 
-    def deal_card_to_palyer(self, player):
-        player.add_card_to_hand(self.shoe.remove_card())
+    def deal_card_to_player(self, player):
+        card = self.shoe.remove_card()
+        player.add_card_to_hand(card)
 
     def deal_card_to_dealer(self):
         card = self.shoe.remove_card()
+        self.add_card_to_hand(card)
+
+    def add_card_to_hand(self, card):
         self.hand.append(card)
 
     def hand_to_string(self):
