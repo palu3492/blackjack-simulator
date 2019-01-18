@@ -17,22 +17,20 @@ class Player:
             string += str(card.get_value()) + " "
         return string
 
-    #return either (H)it, (S)tand, (D)ouble down, (Sp)lit,
-    def make_move(self, dealers_card):
-        # Ace can be 1 or 11
-        # reference rules using my cards and dealers card
-
+    #return either (H)it, (S)tand, (D)ouble down, S(P)lit,
+    def make_move(self, dealers_up_card):
+        # Reference rules using my cards and dealers card
         # After initial deal round
         if len(self.hand) == 2:
             # Are hand is a pair
             if self.hand[0].get_value() == self.hand[1].get_value():
-                return self.rules.get_pair_move(self.hand[0].get_value(), dealers_card)
+                return self.rules.get_pair_move(self.hand[0].get_value(), dealers_up_card)
             # If hand contains a ace
             elif self.hand[0].get_value() == 1 or self.hand[1].get_value() == 1:
-                return self.rules.get_soft_total_move(self.get_non_ace(), dealers_card)
+                return self.rules.get_soft_total_move(self.get_non_ace(), dealers_up_card)
             # If no ace or pair in hand
             else:
-                return self.rules.get_hard_total_move(self.get_hand_total(), dealers_card)
+                return self.rules.get_hard_total_move(self.get_hand_total(), dealers_up_card)
         else:
             total = self.get_hand_total()
             if total >= 17:
