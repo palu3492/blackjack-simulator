@@ -6,7 +6,7 @@ from DiscardPile import DiscardPile
 from Rules import Rules
 import time
 
-number_of_games = 1000
+number_of_games = 10000
 games_played = 0
 number_of_players = 4
 players = []
@@ -33,8 +33,12 @@ for player_count in range(number_of_players):
 def game_over():
     # Discard all hands
     dealer.discard_hands(players)
-    for player in players:
-        player.reset_bust()
+    # Check who busted and who didn't
+    # Players take care of money here
+    #  Have the players check each of there hands to see if they won or lost
+    # Also dealer (casino) should add up there money
+    # if dealer had blackjack then bets are refunded for those who didn't bust
+    # maybe set variable in player and dealer for difdferent winnings
 
 start_time = time.time()
 for game in range(number_of_games):
@@ -42,33 +46,44 @@ for game in range(number_of_games):
     dealer.deal_cards(players)
     # All the players and dealer make their plays
     if not dealer.has_blackjack():
+        # Dealer has blackjack
         # Check which players have 21
-        # players with 21 take there bet back
+        # Players with 21 take there bet back
         # Players without 21 lose there bet
-        pass
+        # Dealer add losers bets
+        for player in players:
+            player.dealer_blackjack()
     else:
+        # Dealer does not have blackjack
         for player in players:
             player_move = ""
-            while player_move != "S" and not player.is_bust():
-                dealers_card = dealer.get_up_card().get_value()
-                # player needs to check if they bust
-                player_move = player.make_move(dealers_card)
+            while player_move != "S":
+                dealers_card = dealer.get_up_card()
+                player_move = player.make_move(dealers_card, 0)
                 if player_move == "H":
                     # Player hit
                     dealer.deal_card_to_player(player)
-                elif player_move == "D":
-                    # double down
-                    # affects betting not hand
-                    # doubles the bet
-                    # get only one card
-                    break
-                elif player_move == "P":
-                    # split
-                    # player now has two hands
-                    # update variable for player
-                    # deal card to each hand
-                    # each card gets original bet (double bet overall)
-                    break
+            if player_move == "D":
+                # double down
+                # affects betting not hand
+                # doubles the bet
+                # get only one card (has to stand)
+                dealer.deal_card_to_player(player)
+                break
+            if player_move == "P":
+                # split
+                # player now has two hands
+                # update variable for player
+                # deal card to each hand
+                # each card gets original bet (double bet overall)
+                # loop through hands and get players move for each (do this in player maybe)
+
+                player.add_hand()
+                # player_move = ""
+                # while player_move != "S" and not player.is_bust():
+                #     player_move = player.make_move(dealers_card, 0)
+                #     player_move = player.make_move(dealers_card, 1)
+                break
 
     # games_played += 1
     game_over()

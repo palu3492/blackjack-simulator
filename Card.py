@@ -18,3 +18,6 @@ class Card:
 
     def get_card_name(self):
         return self.card_name
+
+    def set_value(self, value):
+        self.value = value

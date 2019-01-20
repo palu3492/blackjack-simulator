@@ -13,6 +13,8 @@ class Deck:
             for real_value in range(1, 14):
                 if real_value > 9:
                     value = 10
+                elif real_value == 1:
+                    value = 11
                 else:
                     value = real_value
                 card = Card(suit, value, real_value, self.names[real_value-1])

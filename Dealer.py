@@ -1,12 +1,13 @@
 from Hand import Hand
-
+from Card import Card
 class Dealer:
 
     def __init__(self, shoe, discard_pile):
         self.shoe = shoe
         self.discard_pile = discard_pile
-        self.hand = []
+        self.hand = Hand()
         self.show_whole_hand = False
+        self.money = 0
 
     # Deal 2 cards to each player and the dealer
     def deal_cards(self, players):
@@ -19,12 +20,16 @@ class Dealer:
         if self.shoe.is_empty():
             self.add_discard_to_shoe()
         card = self.shoe.remove_card()
-        player.add_card_to_hand(card)
 
     def deal_card_to_dealer(self):
         if self.shoe.is_empty():
             self.add_discard_to_shoe()
+        # test constant blackjack
+        # card = Card("Hearts", 11, 1, "Ace")
         card = self.shoe.remove_card()
+        # REMOVE THIS
+        if card.get_value() == 11:
+            card.set_value(1)
         self.add_card_to_hand(card)
 
     # If there are less than 60 cards in shoe then add the discard pile back to shoe and shuffle the shoe
@@ -35,26 +40,26 @@ class Dealer:
         self.shoe.shuffle()
 
     def add_card_to_hand(self, card):
-        self.hand.append(card)
+        self.hand.add_card_to_hand(card)
 
-    def hand_to_string(self):
-        string = ""
-        for card in self.hand:
-            string += str(card.get_value()) + " "
-        return string
+    # def hand_to_string(self):
+    #     string = ""
+    #     for card in self.hand:
+    #         string += str(card.get_value()) + " "
+    #     return string
 
-    def get_hand(self):
-        if self.show_whole_hand:
-            return self.hand
-        return self.hand[:1]
+    # def get_hand(self):
+    #     if self.show_whole_hand:
+    #         return self.hand
+    #     return self.hand[:1]
 
     def get_up_card(self):
-        return self.hand[0]
+        return self.hand.get_cards()[0]
 
     def pop_hand(self):
-        hand = self.hand
-        self.hand = []
-        return hand
+        cards = self.hand.get_cards()
+        self.hand = Hand()
+        return cards
 
     def discard_hands(self, players):
         for player in players:
@@ -65,3 +70,9 @@ class Dealer:
         if self.hand.get_hand_total() == 21:
             return True
         return False
+
+    def hand_won(self, did_win):
+        if did_win:
+            self.money += 10
+        else:
+            self.money -= 10
