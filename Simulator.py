@@ -6,7 +6,7 @@ from DiscardPile import DiscardPile
 from Rules import Rules
 import time
 
-number_of_games = 1000000
+number_of_games = 100
 games_played = 0
 number_of_players = 4
 players = []
@@ -45,15 +45,20 @@ for game in range(number_of_games):
         player_move = ""
         while player_move != "S" and not player.is_bust():
             dealers_card = dealer.get_up_card().get_value()
+            # player needs to check if they bust
             player_move = player.make_move(dealers_card)
             if player_move == "H":
                 # Player hit
                 dealer.deal_card_to_player(player)
             elif player_move == "D":
                 # double down
+                # affects betting not hand
                 break
             elif player_move == "P":
                 # split
+                # player now has two hands
+                # update variable for player
+                # deal card to each hand
                 break
 
     # games_played += 1
