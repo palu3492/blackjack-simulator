@@ -1,3 +1,4 @@
+from Hand import Hand
 
 class Dealer:
 
@@ -15,22 +16,16 @@ class Dealer:
             self.deal_card_to_dealer()
 
     def deal_card_to_player(self, player):
-        card = self.shoe.remove_card()
-        # If returned a card and not False in case that there are less than 60 cards in shoe
-        if card:
-            player.add_card_to_hand(card)
-        else:
+        if self.shoe.is_empty():
             self.add_discard_to_shoe()
-            self.deal_card_to_player(player)
+        card = self.shoe.remove_card()
+        player.add_card_to_hand(card)
 
     def deal_card_to_dealer(self):
-        card = self.shoe.remove_card()
-        # If returned a card and not False in case that there are less than 60 cards in shoe
-        if card:
-            self.add_card_to_hand(card)
-        else:
+        if self.shoe.is_empty():
             self.add_discard_to_shoe()
-            self.deal_card_to_dealer()
+        card = self.shoe.remove_card()
+        self.add_card_to_hand(card)
 
     # If there are less than 60 cards in shoe then add the discard pile back to shoe and shuffle the shoe
     def add_discard_to_shoe(self):
@@ -65,3 +60,8 @@ class Dealer:
         for player in players:
             self.discard_pile.add_cards(player.pop_hand())
         self.discard_pile.add_cards(self.pop_hand())
+
+    def has_blackjack(self):
+        if self.hand.get_hand_total() == 21:
+            return True
+        return False

@@ -14,10 +14,13 @@ class Shoe:
     def shuffle(self):
         random.shuffle(self.cards)
 
-    def remove_card(self):
+    def is_empty(self):
         if (self.number_of_decks == 1 and len(self.cards) >= 1) or (self.number_of_decks > 1 and len(self.cards) > 60):
-            return self.cards.pop(0)
-        return False
+            return False
+        return True
+
+    def remove_card(self):
+        return self.cards.pop(0)
 
     def add_cards(self, cards):
         self.cards += cards

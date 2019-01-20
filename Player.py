@@ -3,24 +3,23 @@ class Player:
 
     def __init__(self, rules):
         self.rules = rules
-        self.hand = []
-        self.hand_total = 0
-        self.bust = False
+        self.hands = []
 
-    def add_card_to_hand(self, card):
-        self.hand_total += card.get_value()
-        self.hand.append(card)
+    def add_card_to_hand(self, card, hand_number):
+        hand = self.hands[hand_number]
+        hand.add_card_to_hand(card)
 
-    def hand_to_string(self):
-        string = ""
-        for card in self.hand:
-            string += str(card.get_value()) + " "
-        return string
+    # def hand_to_string(self):
+    #     string = ""
+    #     for card in self.hand:
+    #         string += str(card.get_value()) + " "
+    #     return string
 
     #return either (H)it, (S)tand, (D)ouble down, S(P)lit,
     def make_move(self, dealers_up_card):
         # Reference rules using my cards and dealers card
         # After initial deal round
+        # Check if you bust first
         move = ""
         if len(self.hand) == 2:
             # Are hand is a pair
@@ -40,28 +39,28 @@ class Player:
                 move = "H"
         return move
 
-    def get_hand_total(self):
-        return self.hand_total
+    # def get_hand_total(self):
+    #     return self.hand_total
+    #
+    # def is_bust(self):
+    #     return self.bust
+    #
+    # def reset_bust(self):
+    #     self.bust = False
+    #
+    # def set_hand(self, hand):
+    #     self.hand = hand
 
-    def is_bust(self):
-        return self.bust
+    # def get_hand(self):
+    #     return self.hand
 
-    def reset_bust(self):
-        self.bust = False
-
-    def set_hand(self, hand):
-        self.hand = hand
-
-    def get_hand(self):
-        return self.hand
-
-    def get_non_ace(self):
-        if self.hand[0].get_value() == 1:
-            return self.hand[1].get_value()
-        return self.hand[0].get_value()
-
-    def pop_hand(self):
-        hand = self.hand
-        self.hand = []
-        self.hand_total = 0
-        return hand
+    # def get_non_ace(self):
+    #     if self.hand[0].get_value() == 1:
+    #         return self.hand[1].get_value()
+    #     return self.hand[0].get_value()
+    #
+    # def pop_hand(self):
+    #     hand = self.hand
+    #     self.hand = []
+    #     self.hand_total = 0
+    #     return hand

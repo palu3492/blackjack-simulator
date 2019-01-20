@@ -6,7 +6,7 @@ from DiscardPile import DiscardPile
 from Rules import Rules
 import time
 
-number_of_games = 100
+number_of_games = 1000
 games_played = 0
 number_of_players = 4
 players = []
@@ -41,33 +41,39 @@ for game in range(number_of_games):
     # Deal out the cards
     dealer.deal_cards(players)
     # All the players and dealer make their plays
-    for player in players:
-        player_move = ""
-        while player_move != "S" and not player.is_bust():
-            dealers_card = dealer.get_up_card().get_value()
-            # player needs to check if they bust
-            player_move = player.make_move(dealers_card)
-            if player_move == "H":
-                # Player hit
-                dealer.deal_card_to_player(player)
-            elif player_move == "D":
-                # double down
-                # affects betting not hand
-                break
-            elif player_move == "P":
-                # split
-                # player now has two hands
-                # update variable for player
-                # deal card to each hand
-                break
+    if not dealer.has_blackjack():
+        # Check which players have 21
+        # players with 21 take there bet back
+        # Players without 21 lose there bet
+        pass
+    else:
+        for player in players:
+            player_move = ""
+            while player_move != "S" and not player.is_bust():
+                dealers_card = dealer.get_up_card().get_value()
+                # player needs to check if they bust
+                player_move = player.make_move(dealers_card)
+                if player_move == "H":
+                    # Player hit
+                    dealer.deal_card_to_player(player)
+                elif player_move == "D":
+                    # double down
+                    # affects betting not hand
+                    # doubles the bet
+                    # get only one card
+                    break
+                elif player_move == "P":
+                    # split
+                    # player now has two hands
+                    # update variable for player
+                    # deal card to each hand
+                    # each card gets original bet (double bet overall)
+                    break
 
     # games_played += 1
-    # print(games_played)
-
-
     game_over()
 
-
+# print(str(games_played) + " games played")
 end_time = time.time()
 print(end_time - start_time)
 
