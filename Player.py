@@ -7,6 +7,7 @@ class Player:
         self.money = 1000 # User enters in how much money the players have (might not matter)
         self.money_lost = 0
         self.money_won = 0
+        self.double_down = False
 
     def add_card_to_hand(self, card, hand_number):
         self.hands[hand_number].add_card_to_hand(card)
@@ -25,22 +26,26 @@ class Player:
         move = ""
         hand = self.hands[hand_number]
         cards_in_hand = hand.get_cards()
-        if len(cards_in_hand) == 2:
-            # Is hand is a pair
-            if cards_in_hand[0].get_value() == cards_in_hand[1].get_value():
-                move = self.rules.get_pair_move(cards_in_hand[0], dealers_up_card)
-            # If hand contains a ace
-            elif cards_in_hand[0].get_value() == 11 or cards_in_hand[1].get_value() == 11:
-                move = self.rules.get_soft_total_move(hand.get_non_ace_card(), dealers_up_card)
-            # If no ace or pair in hand
-            else:
-                move = self.rules.get_hard_total_move(hand.get_hand_total(), dealers_up_card)
+        if hand.get_hand_total() > 21:
+            hand.did_bust()
         else:
-            total = hand.get_hand_total()
-            if total >= 17:
-                move = "S"
+            # REMOVE 2 CARD LIMIT
+            if len(cards_in_hand) == 2:
+                # Is hand is a pair
+                if cards_in_hand[0].get_value() == cards_in_hand[1].get_value():
+                    move = self.rules.get_pair_move(cards_in_hand[0], dealers_up_card)
+                # If hand contains a ace
+                elif cards_in_hand[0].get_value() == 1 or cards_in_hand[1].get_value() == 1:
+                    move = self.rules.get_soft_total_move(hand.get_non_ace_card(), dealers_up_card)
+                # If no ace or pair in hand
+                else:
+                    move = self.rules.get_hard_total_move(hand.get_hand_total(), dealers_up_card)
             else:
-                move = "H"
+                total = hand.get_hand_total()
+                if total >= 17:
+                    move = "S"
+                else:
+                    move = "H"
         return move
 
     # def get_hand_total(self):
@@ -70,8 +75,10 @@ class Player:
         self.hands = [Hand()]
         return cards
 
-    def add_hand(self):
-        self.hands.append(Hand())
+    def add_hand(self, card):
+        hand = Hand()
+        hand.add_card_to_hand(card)
+        self.hands.append(hand)
 
     def dealer_blackjack(self):
         if self.hands[0].get_hand_total() != 21:
@@ -84,3 +91,9 @@ class Player:
     #     else:
     #         self.money -= 10
     #         self.money_lost += 10
+
+    def get_hands(self):
+        return self.hands
+
+    def set_double_down(self):
+        self.double_down = True

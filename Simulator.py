@@ -6,13 +6,16 @@ from DiscardPile import DiscardPile
 from Rules import Rules
 import time
 
-number_of_games = 10000
+
+number_of_games = 1000
 games_played = 0
 number_of_players = 4
 players = []
 number_of_decks = 6
 shoe = Shoe(number_of_decks)
 discard_pile = DiscardPile()
+
+double_down = split = hit =0
 
 # Add each deck to the shoe
 for deck_count in range(number_of_decks):
@@ -30,6 +33,37 @@ rules = Rules()
 for player_count in range(number_of_players):
     players.append(Player(rules))
 
+
+def player_actions(hand_number):
+    global split, double_down, hit
+    player_move = "H"
+    # Give the player cards as long as they keep hitting
+    while player_move == "H" and not player.get_hands()[hand_number].is_bust():
+        player_move = player.make_move(dealer_up_card, hand_number)
+        if player_move == "H":
+            # Hit
+            hit += 1
+            dealer.deal_card_to_player(player, hand_number)
+    if player_move == "D":
+        # Double down
+        # Add half of original bet to total bet
+        double_down += 1
+        dealer.deal_card_to_player(player, hand_number)
+        player.set_double_down()
+    elif player_move == "P":
+        # Split
+        split += 1
+        # Hand splits into two hands, each hand gets original bet
+        card = player.get_hands()[hand_number].pull_last_card()
+        player.add_hand(card)
+        # Deal card to each hand
+        dealer.deal_card_to_player(player, hand_number)
+        player_actions(hand_number)
+        # take second card out of first hand and put it in second
+        dealer.deal_card_to_player(player, hand_number+1)
+        player_actions(hand_number+1)
+
+
 def game_over():
     # Discard all hands
     dealer.discard_hands(players)
@@ -38,57 +72,34 @@ def game_over():
     #  Have the players check each of there hands to see if they won or lost
     # Also dealer (casino) should add up there money
     # if dealer had blackjack then bets are refunded for those who didn't bust
-    # maybe set variable in player and dealer for difdferent winnings
+    # maybe set variable in player and dealer for different winnings
+
+
 
 start_time = time.time()
 for game in range(number_of_games):
+    games_played += 1
     # Deal out the cards
     dealer.deal_cards(players)
     # All the players and dealer make their plays
-    if not dealer.has_blackjack():
+    if dealer.has_blackjack():
         # Dealer has blackjack
-        # Check which players have 21
-        # Players with 21 take there bet back
-        # Players without 21 lose there bet
-        # Dealer add losers bets
+        # Check which players push
         for player in players:
             player.dealer_blackjack()
     else:
         # Dealer does not have blackjack
+        dealer_up_card = dealer.get_up_card()
         for player in players:
-            player_move = ""
-            while player_move != "S":
-                dealers_card = dealer.get_up_card()
-                player_move = player.make_move(dealers_card, 0)
-                if player_move == "H":
-                    # Player hit
-                    dealer.deal_card_to_player(player)
-            if player_move == "D":
-                # double down
-                # affects betting not hand
-                # doubles the bet
-                # get only one card (has to stand)
-                dealer.deal_card_to_player(player)
-                break
-            if player_move == "P":
-                # split
-                # player now has two hands
-                # update variable for player
-                # deal card to each hand
-                # each card gets original bet (double bet overall)
-                # loop through hands and get players move for each (do this in player maybe)
+            player_actions(0)
 
-                player.add_hand()
-                # player_move = ""
-                # while player_move != "S" and not player.is_bust():
-                #     player_move = player.make_move(dealers_card, 0)
-                #     player_move = player.make_move(dealers_card, 1)
-                break
 
-    # games_played += 1
     game_over()
 
-# print(str(games_played) + " games played")
+print(str(games_played) + " games played")
+print(str(double_down) + " double down")
+print(str(split) + " split")
+print(str(hit) + " hit")
 end_time = time.time()
 print(end_time - start_time)
 

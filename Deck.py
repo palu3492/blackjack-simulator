@@ -7,14 +7,12 @@ class Deck:
         self.names = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "10", "Jack", "Queen", "King"]
         self.fill_deck()
 
-    # Add all 54 cards to deck
+    # Add all 52 cards to deck
     def fill_deck(self):
         for suit in ["Hearts", "Spades", "Diamonds", "Clubs"]:
             for real_value in range(1, 14):
                 if real_value > 9:
                     value = 10
-                elif real_value == 1:
-                    value = 11
                 else:
                     value = real_value
                 card = Card(suit, value, real_value, self.names[real_value-1])

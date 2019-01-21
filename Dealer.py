@@ -13,13 +13,14 @@ class Dealer:
     def deal_cards(self, players):
         for i in range(2):
             for player in players:
-                self.deal_card_to_player(player)
+                self.deal_card_to_player(player, 0)
             self.deal_card_to_dealer()
 
-    def deal_card_to_player(self, player):
+    def deal_card_to_player(self, player, hand_number):
         if self.shoe.is_empty():
             self.add_discard_to_shoe()
         card = self.shoe.remove_card()
+        player.add_card_to_hand(card, hand_number)
 
     def deal_card_to_dealer(self):
         if self.shoe.is_empty():
@@ -27,9 +28,6 @@ class Dealer:
         # test constant blackjack
         # card = Card("Hearts", 11, 1, "Ace")
         card = self.shoe.remove_card()
-        # REMOVE THIS
-        if card.get_value() == 11:
-            card.set_value(1)
         self.add_card_to_hand(card)
 
     # If there are less than 60 cards in shoe then add the discard pile back to shoe and shuffle the shoe

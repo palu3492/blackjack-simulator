@@ -3,11 +3,11 @@ class Hand:
 
     def __init__(self):
         self.cards = []
-        self.total = 0
+        self.cards_value = 0
         self.bust = False
 
     def add_card_to_hand(self, card):
-        self.total += card.get_value()
+        self.cards_value += card.get_value()
         self.cards.append(card)
 
     def hand_to_string(self):
@@ -17,7 +17,7 @@ class Hand:
         return string
 
     def get_hand_total(self):
-        return self.total
+        return self.cards_value
 
     def did_bust(self):
         self.bust = True
@@ -44,5 +44,8 @@ class Hand:
         cards = self.cards
         # Clear hand of cards
         self.cards = []
-        self.total = 0
+        self.cards_value = 0
         return cards
+
+    def pull_last_card(self):
+        return self.cards.pop()
