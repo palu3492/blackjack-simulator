@@ -74,6 +74,12 @@ def dealer_actions():
 
 
 def game_over():
+
+    dealer_hand = dealer.get_hand()
+    dealer_total = dealer_hand.get_hand_total()
+    if dealer_hand.is_ace_in_hand() and dealer_hand.get_soft_total() <= 21:
+        dealer_total = dealer_hand.get_soft_total()
+
     # Dealer and players take or give there bets
     for player in players:
         hands = player.get_hands()
@@ -83,12 +89,17 @@ def game_over():
                 dealer.hand_won(True, hand)
                 player.hand_won(False, hand)
             else:
+                hand_total = hand.get_hand_total()
+                if hand.is_ace_in_hand() and hand.get_soft_total() <= 21:
+                    hand_total = hand.get_soft_total()
+
                 # If dealer has blackjack and hand is blackjack then its a push
-                if dealer.has_blackjack() and hand.get_hand_total() == 21:
+                if dealer.has_blackjack() and hand_total == 21:
+                    # Push (wipe bet on hand)
                     pass
                 # If dealer busted or player is closer to 21
-                elif dealer.get_hand().is_bust() or hand.get_hand_total()> dealer.get_hand().get_hand_total():
-                    if hand.get_hand_total() == 21:
+                elif dealer_hand.is_bust() or hand_total > dealer_total:
+                    if hand_total == 21:
                         hand.blackjack_multiplier()
                     player.hand_won(True, hand)
                     dealer.hand_won(False, hand)
@@ -98,8 +109,6 @@ def game_over():
 
     # Discard all hands
     dealer.discard_hands(players)
-    # if dealer had blackjack then bets are refunded for those who didn't bust
-    # game ends when dealer has blackjack so make sure people are refunded who tie
 
 
 

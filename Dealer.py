@@ -73,11 +73,16 @@ class Dealer:
         return False
 
     def make_move(self):
+        # if ace then hit until 17 but if bust then make ace 11 then hit until 17 again
         if self.hand.get_hand_total() > 21:
             self.hand.busted()
         else:
-            # dealers hit on soft 17
-            if self.hand.get_hand_total() >= 17:
+            # Dealers hit on soft 17
+            if self.hand.is_ace_in_hand() and self.hand.get_soft_total() <= 17:
+                return "H"
+            elif self.hand.is_ace_in_hand() and self.hand.get_soft_total() > 17 and self.hand.get_soft_total() <= 21:
+                return "S"
+            elif self.hand.get_hand_total() >= 17:
                 return "S"
             return "H"
 
