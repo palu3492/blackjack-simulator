@@ -6,9 +6,7 @@ from DiscardPile import DiscardPile
 from Rules import Rules
 import time
 
-
-
-number_of_games = 1000
+number_of_games = 1000000
 games_played = 0
 number_of_players = 4
 players = []
@@ -65,25 +63,43 @@ def player_actions(player, hand_number, dealer_up_card):
         player_actions(player, hand_number+1, dealer_up_card)
 
 
+def dealer_actions():
+    dealer_move = "H"
+    # Give the player cards as long as they keep hitting
+    while dealer_move == "H" and not dealer.get_hand().is_bust():
+        dealer_move = dealer.make_move()
+        if dealer_move == "H":
+            # Hit
+            dealer.deal_card_to_dealer()
+
+
 def game_over():
     # Dealer and players take or give there bets
     for player in players:
         hands = player.get_hands()
         for hand in hands:
+            # If player busted on this hand
             if hand.is_bust():
                 dealer.hand_won(True, hand)
                 player.hand_won(False, hand)
             else:
-                player.hand_won(True, hand)
-                dealer.hand_won(False, hand)
+                # If dealer has blackjack and hand is blackjack then its a push
+                if dealer.has_blackjack() and hand.get_hand_total() == 21:
+                    pass
+                # If dealer busted or player is closer to 21
+                elif dealer.get_hand().is_bust() or hand.get_hand_total()> dealer.get_hand().get_hand_total():
+                    if hand.get_hand_total() == 21:
+                        hand.blackjack_multiplier()
+                    player.hand_won(True, hand)
+                    dealer.hand_won(False, hand)
+                else:
+                    player.hand_won(False, hand)
+                    dealer.hand_won(True, hand)
+
     # Discard all hands
     dealer.discard_hands(players)
-    # Check who busted and who didn't
-    # Players take care of money here
-    #  Have the players check each of there hands to see if they won or lost
-    # Also dealer (casino) should add up there money
     # if dealer had blackjack then bets are refunded for those who didn't bust
-    # maybe set variable in player and dealer for different winnings
+    # game ends when dealer has blackjack so make sure people are refunded who tie
 
 
 
@@ -104,6 +120,8 @@ def run_simulation():
             dealer_up_card = dealer.get_up_card()
             for player in players:
                 player_actions(player, 0, dealer_up_card)
+            dealer_actions()
+
 
         game_over()
 
@@ -113,7 +131,7 @@ run_simulation()
 
 def print_winnings():
     for player in players:
-        print(player.print_winnings())
+        player.print_winnings()
         print('------------------------')
     dealer.print_winnings()
 
@@ -124,8 +142,8 @@ print_winnings()
 # print(str(double_down) + " double down")
 # print(str(split) + " split")
 # print(str(hit) + " hit")
-# end_time = time.time()
-# print(end_time - start_time)
+end_time = time.time()
+print(end_time - start_time)
 
 
 # if players first two cards are ace and facecard then blackjack and dealer does not have blackjack then player gets 1.5 bet

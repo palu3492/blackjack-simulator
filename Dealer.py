@@ -72,6 +72,15 @@ class Dealer:
             return True
         return False
 
+    def make_move(self):
+        if self.hand.get_hand_total() > 21:
+            self.hand.busted()
+        else:
+            # dealers hit on soft 17
+            if self.hand.get_hand_total() >= 17:
+                return "S"
+            return "H"
+
     def hand_won(self, did_win, hand):
         bet = hand.get_bet()
         if did_win:

@@ -36,8 +36,8 @@ class Rules:
     def get_hard_total_move(self, hard_total, dealer_card):
         return self.hard_rules[(hard_total, dealer_card.get_value())]
 
-    def get_soft_total_move(self, soft_card, dealer_card):
-        return self.soft_rules[(soft_card.get_value(), dealer_card.get_value())]
+    def get_soft_total_move(self, non_ace_total, dealer_card):
+        return self.soft_rules[(non_ace_total, dealer_card.get_value())]
 
     def get_pair_move(self, pair_number, dealer_card):
         return self.pair_rules[(pair_number.get_value(), dealer_card.get_value())]

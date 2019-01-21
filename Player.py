@@ -1,10 +1,12 @@
 from Hand import Hand
+
+
 class Player:
 
     def __init__(self, rules):
         self.rules = rules
         self.hands = [Hand()]
-        self.money = 1000 # User enters in how much money the players have (might not matter)
+        self.money = 0 # User enters in how much money the players have (might not matter)
         self.money_lost = 0
         self.money_won = 0
 
@@ -22,25 +24,26 @@ class Player:
 
     #return either (H)it, (S)tand, (D)ouble down, S(P)lit,
     def make_move(self, dealers_up_card, hand_number):
-        # Reference rules using my cards and dealers card
-        # After initial deal round
+        # Reference rules using my cards and dealer up card
         # Check if you bust first
-        move = ""
         hand = self.hands[hand_number]
         cards_in_hand = hand.get_cards()
         if hand.get_hand_total() > 21:
             hand.busted()
         else:
-            # Is hand is a pair
-            if cards_in_hand[0].get_value() == cards_in_hand[1].get_value():
-                move = self.rules.get_pair_move(cards_in_hand[0], dealers_up_card)
-            # If hand contains a ace
-            elif cards_in_hand[0].get_value() == 1 or cards_in_hand[1].get_value() == 1:
-                move = self.rules.get_soft_total_move(hand.get_non_ace_card(), dealers_up_card)
-            # If no ace or pair in hand
+            if len(cards_in_hand) == 2:
+                # Is hand is a pair
+                if cards_in_hand[0].get_value() == cards_in_hand[1].get_value():
+                    return self.rules.get_pair_move(cards_in_hand[0], dealers_up_card)
             else:
-                move = self.rules.get_hard_total_move(hand.get_hand_total(), dealers_up_card)
-        return move
+                # If hand contains a ace
+                # Only soft when ace is 11 so check that it can be 11 without bust
+                if hand.is_ace_in_hand() and hand.get_soft_total() <= 21:
+                    return self.rules.get_soft_total_move(hand.get_hand_total()-1, dealers_up_card)
+                # If no ace or pair in hand
+                # Or ace is treated as 1 because 11 would bust
+                else:
+                    return self.rules.get_hard_total_move(hand.get_hand_total(), dealers_up_card)
 
     # def get_hand_total(self):
     #     return self.hand_total

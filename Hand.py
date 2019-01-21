@@ -20,6 +20,10 @@ class Hand:
     def get_hand_total(self):
         return self.cards_value
 
+    def get_soft_total(self):
+        # Treat ace as 11 (since ace value is 1 add 11)
+        return self.cards_value + 10
+
     def busted(self):
         self.bust = True
 
@@ -49,7 +53,17 @@ class Hand:
         return self.cards.pop()
 
     def double_down(self):
+        self.bet *= 2
+        if self.get_hand_total() > 21:
+            self.busted()
+
+    def blackjack_multiplier(self):
         self.bet *= 1.5
 
     def get_bet(self):
         return self.bet
+
+    def is_ace_in_hand(self):
+        for card in self.cards:
+            if card.get_value() == 1:
+                return True
