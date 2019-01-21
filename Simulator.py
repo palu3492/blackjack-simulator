@@ -7,6 +7,7 @@ from Rules import Rules
 import time
 
 
+
 number_of_games = 1000
 games_played = 0
 number_of_players = 4
@@ -34,7 +35,7 @@ for player_count in range(number_of_players):
     players.append(Player(rules))
 
 
-def player_actions(hand_number):
+def player_actions(player, hand_number, dealer_up_card):
     global split, double_down, hit
     player_move = "H"
     # Give the player cards as long as they keep hitting
@@ -49,7 +50,7 @@ def player_actions(hand_number):
         # Add half of original bet to total bet
         double_down += 1
         dealer.deal_card_to_player(player, hand_number)
-        player.set_double_down()
+        player.get_hands()[hand_number].double_down()
     elif player_move == "P":
         # Split
         split += 1
@@ -58,13 +59,23 @@ def player_actions(hand_number):
         player.add_hand(card)
         # Deal card to each hand
         dealer.deal_card_to_player(player, hand_number)
-        player_actions(hand_number)
+        player_actions(player, hand_number, dealer_up_card)
         # take second card out of first hand and put it in second
         dealer.deal_card_to_player(player, hand_number+1)
-        player_actions(hand_number+1)
+        player_actions(player, hand_number+1, dealer_up_card)
 
 
 def game_over():
+    # Dealer and players take or give there bets
+    for player in players:
+        hands = player.get_hands()
+        for hand in hands:
+            if hand.is_bust():
+                dealer.hand_won(True, hand)
+                player.hand_won(False, hand)
+            else:
+                player.hand_won(True, hand)
+                dealer.hand_won(False, hand)
     # Discard all hands
     dealer.discard_hands(players)
     # Check who busted and who didn't
@@ -76,32 +87,45 @@ def game_over():
 
 
 
+def run_simulation():
+    global games_played
+    for game in range(number_of_games):
+        games_played += 1
+        # Deal out the cards
+        dealer.deal_cards(players)
+        # All the players and dealer make their plays
+        if dealer.has_blackjack():
+            # Dealer has blackjack
+            # Check which players push
+            for player in players:
+                player.dealer_blackjack()
+        else:
+            # Dealer does not have blackjack
+            dealer_up_card = dealer.get_up_card()
+            for player in players:
+                player_actions(player, 0, dealer_up_card)
+
+        game_over()
+
 start_time = time.time()
-for game in range(number_of_games):
-    games_played += 1
-    # Deal out the cards
-    dealer.deal_cards(players)
-    # All the players and dealer make their plays
-    if dealer.has_blackjack():
-        # Dealer has blackjack
-        # Check which players push
-        for player in players:
-            player.dealer_blackjack()
-    else:
-        # Dealer does not have blackjack
-        dealer_up_card = dealer.get_up_card()
-        for player in players:
-            player_actions(0)
+run_simulation()
 
 
-    game_over()
+def print_winnings():
+    for player in players:
+        print(player.print_winnings())
+        print('------------------------')
+    dealer.print_winnings()
 
-print(str(games_played) + " games played")
-print(str(double_down) + " double down")
-print(str(split) + " split")
-print(str(hit) + " hit")
-end_time = time.time()
-print(end_time - start_time)
+
+print_winnings()
+
+# print(str(games_played) + " games played")
+# print(str(double_down) + " double down")
+# print(str(split) + " split")
+# print(str(hit) + " hit")
+# end_time = time.time()
+# print(end_time - start_time)
 
 
 # if players first two cards are ace and facecard then blackjack and dealer does not have blackjack then player gets 1.5 bet

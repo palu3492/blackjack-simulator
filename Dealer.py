@@ -8,6 +8,8 @@ class Dealer:
         self.hand = Hand()
         self.show_whole_hand = False
         self.money = 0
+        self.money_lost = 0
+        self.money_won = 0
 
     # Deal 2 cards to each player and the dealer
     def deal_cards(self, players):
@@ -46,7 +48,8 @@ class Dealer:
     #         string += str(card.get_value()) + " "
     #     return string
 
-    # def get_hand(self):
+    def get_hand(self):
+        return self.hand
     #     if self.show_whole_hand:
     #         return self.hand
     #     return self.hand[:1]
@@ -69,8 +72,16 @@ class Dealer:
             return True
         return False
 
-    def hand_won(self, did_win):
+    def hand_won(self, did_win, hand):
+        bet = hand.get_bet()
         if did_win:
-            self.money += 10
+            self.money += bet
+            self.money_won += bet
         else:
-            self.money -= 10
+            self.money -= bet
+            self.money_lost += bet
+
+    def print_winnings(self):
+        print("Money: " + str(self.money))
+        print("Money lost: " + str(self.money_lost))
+        print("Money won: " + str(self.money_won))

@@ -5,6 +5,7 @@ class Hand:
         self.cards = []
         self.cards_value = 0
         self.bust = False
+        self.bet = 10
 
     def add_card_to_hand(self, card):
         self.cards_value += card.get_value()
@@ -19,14 +20,11 @@ class Hand:
     def get_hand_total(self):
         return self.cards_value
 
-    def did_bust(self):
+    def busted(self):
         self.bust = True
 
     def is_bust(self):
         return self.bust
-
-    def reset_bust(self):
-        self.bust = False
 
     def set_cards(self, cards):
         # Set hand cards to array of cards
@@ -49,3 +47,9 @@ class Hand:
 
     def pull_last_card(self):
         return self.cards.pop()
+
+    def double_down(self):
+        self.bet *= 1.5
+
+    def get_bet(self):
+        return self.bet
