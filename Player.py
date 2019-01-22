@@ -15,8 +15,6 @@ class Player:
     def add_card_to_hand(self, card, hand_number):
         hand = self.hands[hand_number]
         hand.add_card_to_hand(card)
-        if hand.get_hand_total() > 21:
-            hand.busted()
 
     # def hand_to_string(self):
     #     string = ""
@@ -31,10 +29,11 @@ class Player:
         hand = self.hands[hand_number]
         cards_in_hand = hand.get_cards()
         move = ""
-        print(self.hands[hand_number].hand_to_string())
+        print(str(hand.hand_to_string()) + "= " + str(hand.get_hand_total()))
         print(dealers_up_card.get_value())
         if hand.get_hand_total() > 21:
             hand.busted()
+            print('B')
         else:
             # Is hand is a pair
             if hand.is_pair() and len(cards_in_hand) == 2:
@@ -47,7 +46,6 @@ class Player:
             # Or ace is treated as 1 because 11 would bust
             else:
                 move = self.rules.get_hard_total_move(hand.get_hand_total(), dealers_up_card)
-        print(move)
         return move
 
     # def get_hand_total(self):

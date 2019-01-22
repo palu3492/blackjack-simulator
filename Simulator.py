@@ -39,6 +39,7 @@ def player_actions(player, hand_number, dealer_up_card):
     # Give the player cards as long as they keep hitting
     while player_move == "H" and not player.get_hands()[hand_number].is_bust():
         player_move = player.make_move(dealer_up_card, hand_number)
+        print(player_move)
         if player_move == "H":
             # Hit
             hit += 1
