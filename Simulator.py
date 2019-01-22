@@ -6,7 +6,7 @@ from DiscardPile import DiscardPile
 from Rules import Rules
 import time
 
-number_of_games = 1000000
+number_of_games = 1000
 games_played = 0
 number_of_players = 4
 players = []
@@ -30,7 +30,7 @@ rules = Rules()
 
 # Add each player to game (add to players list)
 for player_count in range(number_of_players):
-    players.append(Player(rules))
+    players.append(Player(rules, player_count+1))
 
 
 def player_actions(player, hand_number, dealer_up_card):
@@ -45,16 +45,16 @@ def player_actions(player, hand_number, dealer_up_card):
             dealer.deal_card_to_player(player, hand_number)
     if player_move == "D":
         # Double down
-        # Add half of original bet to total bet
         double_down += 1
+        # Give 1 card to hand
         dealer.deal_card_to_player(player, hand_number)
+        # Double bet
         player.get_hands()[hand_number].double_down()
     elif player_move == "P":
         # Split
         split += 1
         # Hand splits into two hands, each hand gets original bet
-        card = player.get_hands()[hand_number].pull_last_card()
-        player.add_hand(card)
+        player.split_hand(hand_number)
         # Deal card to each hand
         dealer.deal_card_to_player(player, hand_number)
         player_actions(player, hand_number, dealer_up_card)
@@ -74,9 +74,9 @@ def dealer_actions():
 
 
 def game_over():
-
     dealer_hand = dealer.get_hand()
     dealer_total = dealer_hand.get_hand_total()
+    print("Dealer: " + str(dealer_total))
     if dealer_hand.is_ace_in_hand() and dealer_hand.get_soft_total() <= 21:
         dealer_total = dealer_hand.get_soft_total()
 
@@ -90,16 +90,18 @@ def game_over():
                 player.hand_won(False, hand)
             else:
                 hand_total = hand.get_hand_total()
-                if hand.is_ace_in_hand() and hand.get_soft_total() <= 21:
-                    hand_total = hand.get_soft_total()
+                print("Player " + str(player.get_player_id()) + ": " + str(hand_total))
+                # if hand.is_ace_in_hand() and hand.get_soft_total() <= 21:
+                #     hand_total = hand.get_soft_total()
 
                 # If dealer has blackjack and hand is blackjack then its a push
-                if dealer.has_blackjack() and hand_total == 21:
+                if dealer.has_blackjack() and player.has_blackjack(hand):
                     # Push (wipe bet on hand)
                     pass
                 # If dealer busted or player is closer to 21
                 elif dealer_hand.is_bust() or hand_total > dealer_total:
-                    if hand_total == 21:
+                    # Player gets paid 3:2 when they have blackjack
+                    if player.has_blackjack(hand):
                         hand.blackjack_multiplier()
                     player.hand_won(True, hand)
                     dealer.hand_won(False, hand)
@@ -109,6 +111,7 @@ def game_over():
 
     # Discard all hands
     dealer.discard_hands(players)
+    print("------")
 
 
 

@@ -64,7 +64,7 @@ class Dealer:
 
     def discard_hands(self, players):
         for player in players:
-            self.discard_pile.add_cards(player.pop_hand())
+            self.discard_pile.add_cards(player.pop_hands())
         self.discard_pile.add_cards(self.pop_hand())
 
     def has_blackjack(self):
