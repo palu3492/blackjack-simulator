@@ -34,6 +34,7 @@ for player_count in range(number_of_players):
 
 
 def player_actions(player, hand_number, dealer_up_card):
+    print("-Hand " + str(hand_number+1) + ": ")
     global split, double_down, hit
     player_move = "H"
     # Give the player cards as long as they keep hitting
@@ -78,24 +79,22 @@ def game_over():
     dealer_hand = dealer.get_hand()
     dealer_total = dealer_hand.get_hand_total()
     print("Dealer: " + str(dealer_total))
-    if dealer_hand.is_ace_in_hand() and dealer_hand.get_soft_total() <= 21:
-        dealer_total = dealer_hand.get_soft_total()
 
     # Dealer and players take or give there bets
     for player in players:
         hands = player.get_hands()
         for hand in hands:
             # If player busted on this hand
+            hand_total = hand.get_hand_total()
             if hand.is_bust():
                 dealer.hand_won(True, hand)
                 player.hand_won(False, hand)
+                print("Player " + str(player.get_player_id()) + ": " + str(hand_total) + "  BUST")
             else:
-                hand_total = hand.get_hand_total()
-                print("Player " + str(player.get_player_id()) + ": " + str(hand_total))
-                # if hand.is_ace_in_hand() and hand.get_soft_total() <= 21:
-                #     hand_total = hand.get_soft_total()
+                # print("Player " + str(player.get_player_id()) + ": " + str(hand_total))
 
                 # If dealer has blackjack and hand is blackjack then its a push
+                win = True
                 if dealer.has_blackjack() and player.has_blackjack(hand):
                     # Push (wipe bet on hand)
                     pass
@@ -109,6 +108,11 @@ def game_over():
                 else:
                     player.hand_won(False, hand)
                     dealer.hand_won(True, hand)
+                    win = False
+                if win:
+                    print("Player " + str(player.get_player_id()) + ": " + str(hand_total) + "  WIN")
+                else:
+                    print("Player " + str(player.get_player_id()) + ": " + str(hand_total) + "  LOSE")
 
     # Discard all hands
     dealer.discard_hands(players)
@@ -131,7 +135,10 @@ def run_simulation():
         else:
             # Dealer does not have blackjack
             dealer_up_card = dealer.get_up_card()
+            player_count = 0
             for player in players:
+                player_count += 1
+                print("Player " + str(player_count)+": ")
                 player_actions(player, 0, dealer_up_card)
             dealer_actions()
 

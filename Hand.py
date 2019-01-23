@@ -71,7 +71,9 @@ class Hand:
     #     return cards
 
     def pull_last_card(self):
-        return self.cards.pop()
+        card = self.cards.pop()
+        self.cards_value -= card.get_value()
+        return card
 
     def double_down(self):
         self.bet *= 2
