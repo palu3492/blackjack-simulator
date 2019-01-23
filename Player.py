@@ -29,11 +29,11 @@ class Player:
         hand = self.hands[hand_number]
         cards_in_hand = hand.get_cards()
         move = ""
-        print(str(hand.hand_to_string()) + "= " + str(hand.get_hand_total()))
-        print(dealers_up_card.get_value())
+        # print(str(hand.hand_to_string()) + "= " + str(hand.get_hand_total()))
+        # print(dealers_up_card.get_value())
         if hand.get_hand_total() > 21:
             hand.busted()
-            print('B')
+            move = "B"
         else:
             # Is hand is a pair
             if hand.is_pair() and len(cards_in_hand) == 2:
@@ -90,6 +90,7 @@ class Player:
 
     def hand_won(self, did_win, hand):
         bet = hand.get_bet()
+        # print(bet)
         if did_win:
             self.money += bet
             self.money_won += bet

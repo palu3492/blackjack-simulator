@@ -6,15 +6,15 @@ from DiscardPile import DiscardPile
 from Rules import Rules
 import time
 
-number_of_games = 1000
+number_of_games = 100000
 games_played = 0
-number_of_players = 4
+number_of_players = 1
 players = []
 number_of_decks = 6
 shoe = Shoe(number_of_decks)
 discard_pile = DiscardPile()
 
-double_down = split = hit =0
+double_down = split = hit = 0
 
 # Add each deck to the shoe
 for deck_count in range(number_of_decks):
@@ -34,13 +34,13 @@ for player_count in range(number_of_players):
 
 
 def player_actions(player, hand_number, dealer_up_card):
-    print("-Hand " + str(hand_number+1) + ": ")
+    # print("-Hand " + str(hand_number+1) + ": ")
     global split, double_down, hit
     player_move = "H"
     # Give the player cards as long as they keep hitting
     while player_move == "H" and not player.get_hands()[hand_number].is_bust():
         player_move = player.make_move(dealer_up_card, hand_number)
-        print(player_move)
+        # print(player_move)
         if player_move == "H":
             # Hit
             hit += 1
@@ -78,7 +78,7 @@ def dealer_actions():
 def game_over():
     dealer_hand = dealer.get_hand()
     dealer_total = dealer_hand.get_hand_total()
-    print("Dealer: " + str(dealer_total))
+    # print("Dealer: " + str(dealer_total))
 
     # Dealer and players take or give there bets
     for player in players:
@@ -89,19 +89,25 @@ def game_over():
             if hand.is_bust():
                 dealer.hand_won(True, hand)
                 player.hand_won(False, hand)
-                print("Player " + str(player.get_player_id()) + ": " + str(hand_total) + "  BUST")
+                # print("Player " + str(player.get_player_id()) + ": " + str(hand_total) + "  BUST")
             else:
                 # print("Player " + str(player.get_player_id()) + ": " + str(hand_total))
 
                 # If dealer has blackjack and hand is blackjack then its a push
                 win = True
-                if dealer.has_blackjack() and player.has_blackjack(hand):
+                if dealer.has_blackjack() and hand.is_blackjack():
+                    # Both get blackjack then u get 1.5 bet
+                    # ONLY IF 2 CARDS IN HAND
+                    hand.push_blackjack_multiplier()
+                    player.hand_won(True, hand)
+                    dealer.hand_won(False, hand)
+                elif hand_total == dealer_total:
                     # Push (wipe bet on hand)
                     pass
                 # If dealer busted or player is closer to 21
                 elif dealer_hand.is_bust() or hand_total > dealer_total:
                     # Player gets paid 3:2 when they have blackjack
-                    if player.has_blackjack(hand):
+                    if hand.is_blackjack():
                         hand.blackjack_multiplier()
                     player.hand_won(True, hand)
                     dealer.hand_won(False, hand)
@@ -109,14 +115,16 @@ def game_over():
                     player.hand_won(False, hand)
                     dealer.hand_won(True, hand)
                     win = False
-                if win:
-                    print("Player " + str(player.get_player_id()) + ": " + str(hand_total) + "  WIN")
-                else:
-                    print("Player " + str(player.get_player_id()) + ": " + str(hand_total) + "  LOSE")
+                # if win:
+                #     print("Player " + str(player.get_player_id()) + ": " + str(hand_total) + "  WIN")
+                #     pass
+                # else:
+                #     print("Player " + str(player.get_player_id()) + ": " + str(hand_total) + "  LOSE")
+                #     pass
 
     # Discard all hands
     dealer.discard_hands(players)
-    print("------")
+    # print("------")
 
 
 
@@ -138,7 +146,7 @@ def run_simulation():
             player_count = 0
             for player in players:
                 player_count += 1
-                print("Player " + str(player_count)+": ")
+                # print("Player " + str(player_count)+": ")
                 player_actions(player, 0, dealer_up_card)
             dealer_actions()
 
@@ -150,9 +158,14 @@ run_simulation()
 
 
 def print_winnings():
+    player_count = 0
+    print()
     for player in players:
+        player_count += 1
+        print("Player " + str(player_count) + ":")
         player.print_winnings()
         print('------------------------')
+    print("DEALER:")
     dealer.print_winnings()
 
 

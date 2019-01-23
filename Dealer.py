@@ -68,6 +68,10 @@ class Dealer:
         self.discard_pile.add_cards(self.pop_hand())
 
     def has_blackjack(self):
+        if self.hand.get_hand_total() == 21 and len(self.hand.cards) == 2:
+            return True
+        return False
+    def has_twenty_one(self):
         if self.hand.get_hand_total() == 21:
             return True
         return False

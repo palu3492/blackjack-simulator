@@ -80,9 +80,21 @@ class Hand:
         if self.get_hand_total() > 21:
             self.busted()
 
+    def is_blackjack(self):
+        if self.get_hand_total() == 21 and len(self.cards) == 2:
+            return True
+        return False
+    def is_twenty_one(self):
+        if self.get_hand_total() == 21:
+            return True
+        return False
+
     # Player gets paid 3:2 when they have blackjack
     def blackjack_multiplier(self):
         self.bet *= 1.5
+
+    def push_blackjack_multiplier(self):
+        self.bet *= 0.5
 
     def get_bet(self):
         return self.bet
