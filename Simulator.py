@@ -11,22 +11,20 @@ class Simulator:
 
     def __init__(self):
         self.number_of_games = 100000
-        number_of_players = 1
+        number_of_players = 4
         self.players = []
         number_of_decks = 6
         self.shoe = Shoe(number_of_decks)
         self.discard_pile = DiscardPile()
 
-        # double_down = split = hit = 0
-
         # Add each deck to the shoe
         for deck_count in range(number_of_decks):
             self.shoe.add_deck(Deck())
         # Shuffle shoe or decks?
-            self.shoe.shuffle()
+        self.shoe.shuffle()
 
         # Create dealer and give them the shoe
-            self.dealer = Dealer(self.shoe, self.discard_pile)
+        self.dealer = Dealer(self.shoe, self.discard_pile)
 
         # Load in rules and give them to each player
         rules = Rules()
@@ -80,8 +78,8 @@ class Simulator:
         for player in self.players:
             hands = player.get_hands()
             for hand in hands:
-                # If player busted on this hand
                 hand_total = hand.get_hand_total()
+                # If the player busts, then the dealer does not need to risk a bust
                 if hand.is_bust():
                     self.dealer.hand_won(True, hand)
                     player.hand_won(False, hand)
@@ -91,19 +89,13 @@ class Simulator:
 
                     # If dealer has blackjack and hand is blackjack then its a push
                     win = True
-                    if self.dealer.has_blackjack() and hand.is_blackjack():
-                        # Both get blackjack then u get 1.5 bet
-                        # ONLY IF 2 CARDS IN HAND
-                        hand.push_blackjack_multiplier()
-                        player.hand_won(True, hand)
-                        self.dealer.hand_won(False, hand)
-                    elif hand_total == dealer_total:
+                    if hand_total == dealer_total:
                         # Push (wipe bet on hand)
                         pass
                     # If dealer busted or player is closer to 21
                     elif dealer_hand.is_bust() or hand_total > dealer_total:
                         # Player gets paid 3:2 when they have blackjack
-                        if hand.is_blackjack():
+                        if hand.is_blackjack() and not player.is_split():
                             hand.blackjack_multiplier()
                         player.hand_won(True, hand)
                         self.dealer.hand_won(False, hand)
@@ -126,6 +118,7 @@ class Simulator:
 
     def run_simulation(self):
         for game in range(self.number_of_games):
+            # Place bets before deal
             # Deal out the cards
             self.dealer.deal_cards(self.players)
             # All the players and dealer make their plays

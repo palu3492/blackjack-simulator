@@ -93,9 +93,6 @@ class Hand:
     def blackjack_multiplier(self):
         self.bet *= 1.5
 
-    def push_blackjack_multiplier(self):
-        self.bet *= 0.5
-
     def get_bet(self):
         return self.bet
 

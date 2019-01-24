@@ -7,4 +7,4 @@ simulator.run_simulation()
 end_time = time.time()
 simulator.print_winnings()
 
-print(end_time - start_time)
+print("Seconds:  " + str(end_time - start_time))

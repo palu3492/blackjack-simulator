@@ -40,10 +40,14 @@ class Player:
                 move = self.rules.get_pair_move(cards_in_hand[0], dealers_up_card)
             # If hand contains a ace
             # Only soft when ace is 11 so check that it can be 11 without bust
+            # A soft hand contains an Ace that is being counted as eleven
+            # Use total of all cards besides ace because more than two cards can still be soft total
+            # Ace and a Six = soft 17
             elif hand.is_ace_in_hand() and hand.is_soft() and hand.get_soft_total() <= 21:
                 move = self.rules.get_soft_total_move(hand.get_non_ace_total(), dealers_up_card)
             # If no ace or pair in hand
-            # Or ace is treated as 1 because 11 would bust
+            # Or ace is treated as 1 because 11 would bust the hand
+            # Ace, Six and a Ten = hard 17
             else:
                 move = self.rules.get_hard_total_move(hand.get_hand_total(), dealers_up_card)
         return move
@@ -76,6 +80,7 @@ class Player:
         return cards
 
     def split_hand(self, hand_number):
+        self.split_number += 1
         card = self.hands[hand_number].pull_last_card()
         new_hand = Hand()
         new_hand.add_card_to_hand(card)
@@ -108,5 +113,10 @@ class Player:
 
     def has_blackjack(self, hand):
         if hand.get_hand_total() == 21:
+            return True
+        return False
+
+    def is_split(self):
+        if len(self.hands) > 1:
             return True
         return False
