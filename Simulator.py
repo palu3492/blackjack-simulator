@@ -6,177 +6,164 @@ from DiscardPile import DiscardPile
 from Rules import Rules
 import time
 
-number_of_games = 100000
-games_played = 0
-number_of_players = 1
-players = []
-number_of_decks = 6
-shoe = Shoe(number_of_decks)
-discard_pile = DiscardPile()
 
-double_down = split = hit = 0
+class Simulator:
 
-# Add each deck to the shoe
-for deck_count in range(number_of_decks):
-    shoe.add_deck(Deck())
-# Shuffle shoe or decks?
-shoe.shuffle()
+    def __init__(self):
+        self.number_of_games = 100000
+        number_of_players = 1
+        self.players = []
+        number_of_decks = 6
+        self.shoe = Shoe(number_of_decks)
+        self.discard_pile = DiscardPile()
 
-# Create dealer and give them the shoe
-dealer = Dealer(shoe, discard_pile)
+        # double_down = split = hit = 0
 
-# Load in rules and give them to each player
-rules = Rules()
+        # Add each deck to the shoe
+        for deck_count in range(number_of_decks):
+            self.shoe.add_deck(Deck())
+        # Shuffle shoe or decks?
+            self.shoe.shuffle()
 
-# Add each player to game (add to players list)
-for player_count in range(number_of_players):
-    players.append(Player(rules, player_count+1))
+        # Create dealer and give them the shoe
+            self.dealer = Dealer(self.shoe, self.discard_pile)
 
+        # Load in rules and give them to each player
+        rules = Rules()
 
-def player_actions(player, hand_number, dealer_up_card):
-    # print("-Hand " + str(hand_number+1) + ": ")
-    global split, double_down, hit
-    player_move = "H"
-    # Give the player cards as long as they keep hitting
-    while player_move == "H" and not player.get_hands()[hand_number].is_bust():
-        player_move = player.make_move(dealer_up_card, hand_number)
-        # print(player_move)
-        if player_move == "H":
-            # Hit
-            hit += 1
-            dealer.deal_card_to_player(player, hand_number)
-    if player_move == "D":
-        # Double down
-        double_down += 1
-        # Give 1 card to hand
-        dealer.deal_card_to_player(player, hand_number)
-        # Double bet
-        player.get_hands()[hand_number].double_down()
-    elif player_move == "P":
-        # Split
-        split += 1
-        # Hand splits into two hands, each hand gets original bet
-        player.split_hand(hand_number)
-        # Deal card to each hand
-        dealer.deal_card_to_player(player, hand_number)
-        player_actions(player, hand_number, dealer_up_card)
-        # take second card out of first hand and put it in second
-        dealer.deal_card_to_player(player, hand_number+1)
-        player_actions(player, hand_number+1, dealer_up_card)
+        # Add each player to game (add to players list)
+        for player_count in range(number_of_players):
+            self.players.append(Player(rules, player_count+1))
 
+    def player_actions(self, player, hand_number, dealer_up_card):
+        # print("-Hand " + str(hand_number+1) + ": ")
+        player_move = "H"
+        # Give the player cards as long as they keep hitting
+        while player_move == "H" and not player.get_hands()[hand_number].is_bust():
+            player_move = player.make_move(dealer_up_card, hand_number)
+            # print(player_move)
+            if player_move == "H":
+                # Hit
+                self.dealer.deal_card_to_player(player, hand_number)
+        if player_move == "D":
+            # Double down
+            # Give 1 card to hand
+            self.dealer.deal_card_to_player(player, hand_number)
+            # Double bet
+            player.get_hands()[hand_number].double_down()
+        elif player_move == "P":
+            # Split
+            # Hand splits into two hands, each hand gets original bet
+            player.split_hand(hand_number)
+            # Deal card to each hand
+            self.dealer.deal_card_to_player(player, hand_number)
+            self.player_actions(player, hand_number, dealer_up_card)
+            # take second card out of first hand and put it in second
+            self.dealer.deal_card_to_player(player, hand_number+1)
+            self.player_actions(player, hand_number+1, dealer_up_card)
 
-def dealer_actions():
-    dealer_move = "H"
-    # Give the player cards as long as they keep hitting
-    while dealer_move == "H" and not dealer.get_hand().is_bust():
-        dealer_move = dealer.make_move()
-        if dealer_move == "H":
-            # Hit
-            dealer.deal_card_to_dealer()
+    def dealer_actions(self):
+        dealer_move = "H"
+        # Give the player cards as long as they keep hitting
+        while dealer_move == "H" and not self.dealer.get_hand().is_bust():
+            dealer_move = self.dealer.make_move()
+            if dealer_move == "H":
+                # Hit
+                self.dealer.deal_card_to_dealer()
 
+    def game_over(self):
+        dealer_hand = self.dealer.get_hand()
+        dealer_total = dealer_hand.get_hand_total()
+        # print("Dealer: " + str(dealer_total))
 
-def game_over():
-    dealer_hand = dealer.get_hand()
-    dealer_total = dealer_hand.get_hand_total()
-    # print("Dealer: " + str(dealer_total))
-
-    # Dealer and players take or give there bets
-    for player in players:
-        hands = player.get_hands()
-        for hand in hands:
-            # If player busted on this hand
-            hand_total = hand.get_hand_total()
-            if hand.is_bust():
-                dealer.hand_won(True, hand)
-                player.hand_won(False, hand)
-                # print("Player " + str(player.get_player_id()) + ": " + str(hand_total) + "  BUST")
-            else:
-                # print("Player " + str(player.get_player_id()) + ": " + str(hand_total))
-
-                # If dealer has blackjack and hand is blackjack then its a push
-                win = True
-                if dealer.has_blackjack() and hand.is_blackjack():
-                    # Both get blackjack then u get 1.5 bet
-                    # ONLY IF 2 CARDS IN HAND
-                    hand.push_blackjack_multiplier()
-                    player.hand_won(True, hand)
-                    dealer.hand_won(False, hand)
-                elif hand_total == dealer_total:
-                    # Push (wipe bet on hand)
-                    pass
-                # If dealer busted or player is closer to 21
-                elif dealer_hand.is_bust() or hand_total > dealer_total:
-                    # Player gets paid 3:2 when they have blackjack
-                    if hand.is_blackjack():
-                        hand.blackjack_multiplier()
-                    player.hand_won(True, hand)
-                    dealer.hand_won(False, hand)
-                else:
+        # Dealer and players take or give there bets
+        for player in self.players:
+            hands = player.get_hands()
+            for hand in hands:
+                # If player busted on this hand
+                hand_total = hand.get_hand_total()
+                if hand.is_bust():
+                    self.dealer.hand_won(True, hand)
                     player.hand_won(False, hand)
-                    dealer.hand_won(True, hand)
-                    win = False
-                # if win:
-                #     print("Player " + str(player.get_player_id()) + ": " + str(hand_total) + "  WIN")
-                #     pass
-                # else:
-                #     print("Player " + str(player.get_player_id()) + ": " + str(hand_total) + "  LOSE")
-                #     pass
+                    # print("Player " + str(player.get_player_id()) + ": " + str(hand_total) + "  BUST")
+                else:
+                    # print("Player " + str(player.get_player_id()) + ": " + str(hand_total))
 
-    # Discard all hands
-    dealer.discard_hands(players)
-    # print("------")
+                    # If dealer has blackjack and hand is blackjack then its a push
+                    win = True
+                    if self.dealer.has_blackjack() and hand.is_blackjack():
+                        # Both get blackjack then u get 1.5 bet
+                        # ONLY IF 2 CARDS IN HAND
+                        hand.push_blackjack_multiplier()
+                        player.hand_won(True, hand)
+                        self.dealer.hand_won(False, hand)
+                    elif hand_total == dealer_total:
+                        # Push (wipe bet on hand)
+                        pass
+                    # If dealer busted or player is closer to 21
+                    elif dealer_hand.is_bust() or hand_total > dealer_total:
+                        # Player gets paid 3:2 when they have blackjack
+                        if hand.is_blackjack():
+                            hand.blackjack_multiplier()
+                        player.hand_won(True, hand)
+                        self.dealer.hand_won(False, hand)
+                    else:
+                        player.hand_won(False, hand)
+                        self.dealer.hand_won(True, hand)
+                        win = False
+                    # if win:
+                    #     print("Player " + str(player.get_player_id()) + ": " + str(hand_total) + "  WIN")
+                    #     pass
+                    # else:
+                    #     print("Player " + str(player.get_player_id()) + ": " + str(hand_total) + "  LOSE")
+                    #     pass
 
-
-
-def run_simulation():
-    global games_played
-    for game in range(number_of_games):
-        games_played += 1
-        # Deal out the cards
-        dealer.deal_cards(players)
-        # All the players and dealer make their plays
-        if dealer.has_blackjack():
-            # Dealer has blackjack
-            # Check which players push
-            for player in players:
-                player.dealer_blackjack()
-        else:
-            # Dealer does not have blackjack
-            dealer_up_card = dealer.get_up_card()
-            player_count = 0
-            for player in players:
-                player_count += 1
-                # print("Player " + str(player_count)+": ")
-                player_actions(player, 0, dealer_up_card)
-            dealer_actions()
-
-
-        game_over()
-
-start_time = time.time()
-run_simulation()
+        # Discard all hands
+        self.dealer.discard_hands(self.players)
+        # print("------")
 
 
-def print_winnings():
-    player_count = 0
-    print()
-    for player in players:
-        player_count += 1
-        print("Player " + str(player_count) + ":")
-        player.print_winnings()
-        print('------------------------')
-    print("DEALER:")
-    dealer.print_winnings()
+
+    def run_simulation(self):
+        for game in range(self.number_of_games):
+            # Deal out the cards
+            self.dealer.deal_cards(self.players)
+            # All the players and dealer make their plays
+            if self.dealer.has_blackjack():
+                # Dealer has blackjack
+                # Check which players push
+                for player in self.players:
+                    player.dealer_blackjack()
+            else:
+                # Dealer does not have blackjack
+                dealer_up_card = self.dealer.get_up_card()
+                player_count = 0
+                for player in self.players:
+                    player_count += 1
+                    # print("Player " + str(player_count)+": ")
+                    self.player_actions(player, 0, dealer_up_card)
+                    self.dealer_actions()
+
+            self.game_over()
+
+    def print_winnings(self):
+        player_count = 0
+        print()
+        for player in self.players:
+            player_count += 1
+            print("Player " + str(player_count) + ":")
+            player.print_winnings()
+            print('------------------------')
+        print("DEALER:")
+        self.dealer.print_winnings()
 
 
-print_winnings()
 
 # print(str(games_played) + " games played")
 # print(str(double_down) + " double down")
 # print(str(split) + " split")
 # print(str(hit) + " hit")
-end_time = time.time()
-print(end_time - start_time)
+
 
 
 # if players first two cards are ace and facecard then blackjack and dealer does not have blackjack then player gets 1.5 bet
