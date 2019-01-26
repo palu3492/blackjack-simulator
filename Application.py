@@ -29,29 +29,34 @@ class Application(tk.Frame):
         self.content.columnconfigure(0, weight=1)
         self.content.columnconfigure(1, weight=1)
 
-        self.content.rowconfigure(0, weight=1)
-        self.content.rowconfigure(1, weight=1)
+        self.content.rowconfigure(0, weight=0)
+        self.content.rowconfigure(1, weight=0)
         self.content.rowconfigure(2, weight=1)
-        self.content.rowconfigure(3, weight=1)
+        self.content.rowconfigure(3, weight=0)
         self.content.rowconfigure(4, weight=1)
 
     def setup(self):
         self.master.title("Blackjack Simulator")
         self.master.minsize(width=1000, height=666)
         self.master.maxsize(width=1000, height=666)
-        # self.master.configure(bg='#00ff60')
+        # self.master.configure(background='#00ff60')
 
-    #frame that holds components in the red top bar
+    # Frame that holds components in top black bar
     def create_main_bar(self):
         top = tk.Frame(self.content, bg='#222222', height=48)
         top.grid(column=0, row=0, columnspan=2, rowspan=1, sticky=(tk.E, tk.W))
+        # Add label
+        label = tk.Label(top, text="Title", bg="#222222", fg="#ffffff")
+        top.columnconfigure(0, weight=1)
+        top.rowconfigure(0, weight=1)
+        label.grid(column=0, row=0, columnspan=1, rowspan=1)
 
     def create_sub_bar(self, col, row):
-        top = tk.Frame(self.content, bg='#e1e1e1', height=35)
+        top = tk.Frame(self.content, bg='#e1e1e1', height=35, borderwidth=2, relief="solid")
         top.grid(column=col, row=row, columnspan=1, rowspan=1, sticky=(tk.E, tk.W))
 
     def create_settings_frame(self, col, row):
-        top = tk.Frame(self.content, bg='#ff0000')
+        top = tk.Frame(self.content, bg='#ffffff')
         top.grid(column=col, row=row, columnspan=1, rowspan=1, sticky=(tk.N, tk.S, tk.E, tk.W))
 
     def create_widgets(self):

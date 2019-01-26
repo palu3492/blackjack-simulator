@@ -5,8 +5,8 @@ class Shoe:
     def __init__(self, number_of_decks):
         self.cards = []
         self.number_of_decks = number_of_decks
-        # Plastic insert card is placed so that the last 60 to 75 cards
-        # Not dealing to the bottom of all the cards makes it more difficult for professional card counters to operate effectively
+        # Cut card is placed so that the last 60 to 75 cards
+        # Not dealing to the bottom of all the cards makes it more difficult for card counters to operate effectively
 
     def add_deck(self, deck):
         self.cards += deck.get_deck()

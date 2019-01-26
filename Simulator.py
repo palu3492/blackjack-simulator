@@ -11,7 +11,7 @@ class Simulator:
 
     def __init__(self):
         self.number_of_games = 100000
-        number_of_players = 4
+        number_of_players = 4 # 1-7
         self.players = []
         number_of_decks = 6
         self.shoe = Shoe(number_of_decks)
