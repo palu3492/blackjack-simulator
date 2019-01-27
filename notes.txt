@@ -1,5 +1,8 @@
+Simulator settings:
 Number of games to simulate: 1000 #
 Number of times to run simulator (like 15,000 times do simulation on 2 million games)
+
+Blackjack settings (House rules):
 Number of decks of cards used:  1  2  4  5  6  8
 Dealer hits or stands on a soft 17:  Stands  Hits
 Player can double after a split:  No  Yes
