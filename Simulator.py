@@ -52,13 +52,14 @@ class Simulator:
         elif player_move == "P":
             # Split
             # Hand splits into two hands, each hand gets original bet
+            print(hand_number)
             player.split_hand(hand_number)
             # Deal card to each hand
             self.dealer.deal_card_to_player(player, hand_number)
+            new_hand_number = len(player.get_hands())-1
+            self.dealer.deal_card_to_player(player, new_hand_number)
             self.player_actions(player, hand_number, dealer_up_card)
-            # take second card out of first hand and put it in second
-            self.dealer.deal_card_to_player(player, hand_number+1)
-            self.player_actions(player, hand_number+1, dealer_up_card)
+            self.player_actions(player, new_hand_number, dealer_up_card)
 
     def dealer_actions(self):
         dealer_move = "H"

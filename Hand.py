@@ -6,6 +6,7 @@ class Hand:
         self.cards_value = 0
         self.bust = False
         self.bet = 10
+        self.hand_id = 0
 
     def add_card_to_hand(self, card):
         self.cards_value += card.get_value()
@@ -117,3 +118,9 @@ class Hand:
         if ace and total <= 11:
                 return True
         return False
+
+    def set_hand_id(self, id):
+        self.hand_id = id
+
+    def get_hand_id(self):
+        return self.hand_id

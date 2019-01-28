@@ -4,8 +4,6 @@ Might want to have a class to handle betting so settings can be updated easily
 Also might want a class to handle all changes to base bj game
 A lot of options need to have a NO option
 
-
-
 Card counting strats:
 AOII, Red7, KO, Omega II, HiLo, Halves, Uston APC, UstonSS, Expert, Silver Fox, Uston +-, HiLo-Lite, Zen, Hi-OptI and Hi Opt II for different rules, spreads, decks, risks, hands, penetrations by the card,
 
@@ -22,6 +20,7 @@ https://www.qfit.com/card-counting.htm
 
 VOCAB:
 pip value: the value of cards two through ten
+true count = count / discarded decks
 
 UI:
 Simulator settings
