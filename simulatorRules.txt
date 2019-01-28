@@ -1,0 +1,2 @@
+Number of games to simulate: Number
+Number of times to run simulator: Number (like 15,000 times do simulation on 2 million games)

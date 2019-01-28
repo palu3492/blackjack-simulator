@@ -104,7 +104,7 @@ class Application(tk.Frame):
 
     def create_settings_frame(self, col, row):
         # Create outer frame to hold Canvas and Scrollbar
-        myframe = tk.Frame(self.content, bg='#ffffff', borderwidth=1, relief="solid")
+        myframe = tk.Frame(self.content, bg='#ffffff')
         myframe.grid(column=col, row=row, columnspan=1, rowspan=1, sticky=(tk.N, tk.S, tk.E, tk.W))
         myframe.columnconfigure(0, weight=1)
         myframe.columnconfigure(1, weight=0)
@@ -133,15 +133,26 @@ class Application(tk.Frame):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
     def add_blackjack_rules(self, parent):
-        rule_headings = ["Double Down Rules", "Split Rules", "Surrender and Insurance Rules", "Unusual Blackjack Games", " Win/Play Variations", "Card Handling Variations", "Bonuses", "Tournament Rules"]
+        # Rules are written in houseRules.txt, simulatorRules.txt
+        rule_headings = ["General", "Double Down Rules", "Split Rules", "Surrender and Insurance Rules", "Unusual Blackjack Games", " Win/Play Variations", "Card Handling Variations", "Bonuses", "Tournament Rules"]
+        general_rules = ["Number of decks (1-8 drop down)", "Dealer hits soft 17 (yes no radio)"]
+        double_down_rules = ["Players can double down on (Any first two cards,  9-11 only,  10-11 only, 11 only, 9 onlyu, 8 only drop down)", "Player can double down after split"]
+        split_rules = ["All say the same thing", "All say the same thing"]
+        surrender_insurance_rules = ["All say the same thing", "All say the same thing"]
+        unusual_rules = ["All say the same thing", "All say the same thing"]
+        win_play_variations = ["All say the same thing", "All say the same thing"]
+        card_handling_variations = ["All say the same thing", "All say the same thing"]
+        bonuses_rules = ["All say the same thing", "All say the same thing"]
+        tournament_rules = ["All say the same thing", "All say the same thing"]
+        rules = [general_rules, double_down_rules, split_rules, surrender_insurance_rules, unusual_rules, win_play_variations, card_handling_variations, bonuses_rules, tournament_rules]
         row = 0
         heading_count = 0
         for heading in rule_headings:
             label = tk.Label(parent, text=heading, bg="#ffffff", fg="#000000", font=("Arial", 10, 'bold', 'underline'), padx=7)
             label.grid(column=0, row=row, columnspan=1, rowspan=1, sticky=tk.W)
             row += 1
-            for i in range(2):
-                label = tk.Label(parent, text="Hit after Double Down:", bg="#ffffff", fg="#000000", font=("Arial", 10), padx=7)
+            for rule in rules[heading_count]:
+                label = tk.Label(parent, text=rule, bg="#ffffff", fg="#000000", font=("Arial", 10), padx=7)
                 label.grid(column=0, row=row, columnspan=1, rowspan=1, sticky=tk.W)
                 row += 1
             heading_count += 1

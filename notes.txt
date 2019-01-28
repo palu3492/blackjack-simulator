@@ -1,23 +1,10 @@
-Simulator settings:
-Number of games to simulate: 1000 #
-Number of times to run simulator (like 15,000 times do simulation on 2 million games)
+Make sure rules don't conflict
+Maybe add * or colors to rules that benefit and hurt card counters, could even have a rating on how well a particular setup helps counting
+Might want to have a class to handle betting so settings can be updated easily
+Also might want a class to handle all changes to base bj game
+A lot of options need to have a NO option
 
-Blackjack settings (House rules):
-Number of decks of cards used:  1  2  4  5  6  8
-Dealer hits or stands on a soft 17:  Stands  Hits
-Player can double after a split:  No  Yes
-Player can double on:  Any first two cards  9-11 only  10-11 only, 11 only
-Player can resplit to:  2  3  4 hands
-Player can split aces:  No  Yes
-Blackjack on split aces: No
-Player can hit split aces:  No  Yes
-Player loses only original bet against dealer BJ:  No  Yes
-Surrender rule:  None  Late (Allowed with any dealer upcard) (Allowed on a dealer 2 through 10)
-Early Surrender: YES NO
-Blackjack pays:  3 to 2 OR  6 to 5
-Dealer peek: Dealer peeks for blackjack OR No peek/no hole card (European)(Dealer BJ wins all)
-Plastic insert shoe card: YES NO
-If the dealer's up card is an Ace, you are allowed to make an "insurance" bet.
+
 
 Card counting strats:
 AOII, Red7, KO, Omega II, HiLo, Halves, Uston APC, UstonSS, Expert, Silver Fox, Uston +-, HiLo-Lite, Zen, Hi-OptI and Hi Opt II for different rules, spreads, decks, risks, hands, penetrations by the card,
