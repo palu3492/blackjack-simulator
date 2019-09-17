@@ -103,7 +103,7 @@ class Hand:
                 return True
 
     def is_pair(self):
-        if self.cards[0].get_value() == self.cards[1].get_value():
+        if self.cards[0].get_value() == self.cards[1].get_value() and len(self.cards) == 2:
             return True
         return False
 

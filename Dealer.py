@@ -1,5 +1,6 @@
 from Hand import Hand
 from Card import Card
+import config
 class Dealer:
 
     def __init__(self, shoe, discard_pile):
@@ -81,13 +82,16 @@ class Dealer:
         if self.hand.get_hand_total() > 21:
             self.hand.busted()
         else:
-            # Dealers hit on soft 17
-            if self.hand.is_ace_in_hand() and self.hand.get_soft_total() <= 17:
+            #if
+            # Dealers hits until 17 and if hit on soft then do it
+            # Dealers hit on soft 17?
+            if self.hand.is_ace_in_hand() and self.hand.get_soft_total() == 17 and config.dealer_settings['hit_soft_17']:
                 return "H"
             elif self.hand.is_ace_in_hand() and self.hand.get_soft_total() > 17 and self.hand.get_soft_total() <= 21:
                 return "S"
             elif self.hand.get_hand_total() >= 17:
                 return "S"
+            # if less than 17 and no ace in hand
             return "H"
 
     def hand_won(self, did_win, hand):

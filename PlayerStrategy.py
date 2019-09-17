@@ -1,11 +1,12 @@
+import config
 
-class Rules:
+class PlayerStrategy:
 
     def __init__(self):
         self.hard_rules = {} # 1 - 16 (20, 1): 'S'
         self.soft_rules = {} # 17 - 25
         self.pair_rules = {} # 26 - 35
-        self.file_name = "rules/rules.csv"
+        self.file_name = config.player_settings['play_rules'] # csv file that holds the player's set of rules (strategy)
         self.read_rules_file()
 
     def read_rules_file(self):
