@@ -9,6 +9,9 @@ import time
 import config
 from Game import Game
 # Represents a table at a casino that is playing many games with the same settings
+# Simulator does things that the house would do at a casino
+# For example, the simulator (house) would get the decks together to be used in a game
+# Anything that happens in the game though, won't happen here
 class Simulator:
 
     def __init__(self):
@@ -16,6 +19,7 @@ class Simulator:
         number_of_decks = config.game_settings['number_of_decks']
         self.shoe = Shoe(number_of_decks)
         self.discard_pile = DiscardPile()
+        self.house_rules = HouseRules()
 
         # Add each deck to the shoe
         for deck_count in range(number_of_decks):
@@ -29,7 +33,7 @@ class Simulator:
         # Players at the table (will be used for every game)
         self.players = []
         for player_count in range(config.game_settings['number_of_players']):
-            self.players.append(Player(player_strategy, player_count+1))
+            self.players.append(Player(player_strategy, player_count+1, self.house_rules))
 
         # Create dealer and give them the shoe
         self.dealer = Dealer(self.shoe, self.discard_pile)

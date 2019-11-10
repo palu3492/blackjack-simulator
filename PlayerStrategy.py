@@ -1,4 +1,5 @@
 import config
+import json
 
 class PlayerStrategy:
 
@@ -10,29 +11,23 @@ class PlayerStrategy:
         self.read_rules_file()
 
     def read_rules_file(self):
-        file = open(self.file_name, "r")
-        lines = file.readlines()
+        with open(self.file_name, "r") as read_file:
+            data = json.load(read_file)
 
-        # Read and save hard total rules
-        for line in lines[1:18]:
-            moves = line.strip('\n').split(',')
-            hard_total = moves[0]
-            for dealer_up_card in range(1,11):
-                self.hard_rules[(int(hard_total), dealer_up_card)] = moves[dealer_up_card]
 
-        # Read and save soft total rules
-        for line in lines[19:28]:
-            moves = line.strip('\n').split(',')
-            non_ace_card = moves[0]
-            for dealer_up_card in range(1,11):
-                self.soft_rules[(int(non_ace_card), dealer_up_card)] = moves[dealer_up_card]
+        # Fill in hard total rules
 
-        # Read and save pair rules
-        for line in lines[29:]:
-            moves = line.strip('\n').split(',')
-            pair_number = moves[0].split(' ')[1]
-            for dealer_up_card in range(1, 11):
-                self.pair_rules[(int(pair_number), dealer_up_card)] = moves[dealer_up_card]
+        for hand_total_type in data: # hard, soft, pair
+            for hand_total in data[hand_total_type].keys(): # 21-5, 10-2, 10-1
+                for dealer_up_card in data[hand_total_type][hand_total].keys(): #'21': 'A' or '21': '2'
+                    key = (int(hand_total), int(dealer_up_card))
+                    value = data[hand_total_type][hand_total][dealer_up_card]
+                    if hand_total_type == 'hard':
+                        self.hard_rules[key] = value
+                    elif hand_total_type == 'soft':
+                        self.soft_rules[key] = value
+                    elif hand_total_type == 'pair':
+                        self.pair_rules[key] = value
 
     def get_hard_total_move(self, hard_total, dealer_card):
         return self.hard_rules[(hard_total, dealer_card.get_value())]

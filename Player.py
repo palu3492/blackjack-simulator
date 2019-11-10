@@ -73,6 +73,8 @@ class Player:
     #         return self.hand[1].get_value()
     #     return self.hand[0].get_value()
     #
+
+    # Clears hand of cards and returns those cards
     def pop_hands(self):
         cards = []
         for hand in self.hands:
@@ -80,6 +82,7 @@ class Player:
         self.hands = [Hand()]
         return cards
 
+    # Make current hand into multiple hands
     def split_hand(self, hand_number):
         self.split_number += 1
         card = self.hands[hand_number].pull_last_card()
@@ -87,6 +90,7 @@ class Player:
         new_hand.add_card_to_hand(card)
         self.hands.append(new_hand)
 
+    # Checks if dealer had blackjack
     def dealer_blackjack(self):
         if self.hands[0].get_hand_total() != 21:
             self.hands[0].did_bust = True

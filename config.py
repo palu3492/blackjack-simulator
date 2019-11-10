@@ -1,4 +1,6 @@
 # All settings for everything in simulator
+# I think any UI would just change this
+# Command line options will also change this
 simulator_settings = {
     'number_of_games': 100000
 }
@@ -12,6 +14,7 @@ game_settings = {
     # Player loses ONLY original bet against dealer BJ (BJs are 1.5x)
     'player_bj_bet': False,
     # Plastic insert shoe card for shuffle (could go into a shuffle settings)
+    # Somewhere this insert position needs to be determined
     'shoe_insert': True,
     # Double down -----------------------------------------
     # Double down on which totals: Any first two cards, any hard total, any soft total,  9-11 only,  10-11 only, 11 only, 9 only, 8 only, A9 only, A8 only
@@ -104,5 +107,5 @@ dealer_settings = {
     'hit_soft_17': True
 }
 player_settings = {
-    'play_rules': 'rules/basicStrategy.csv' # Strategy the player is using
+    'play_rules': 'rules/basicStrategy.json' # Strategy the player is using
 }
