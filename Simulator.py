@@ -8,38 +8,34 @@ from HouseRules import HouseRules
 import time
 import config
 from Game import Game
-# Represents a table at a casino that is playing many games with the same settings
-# Simulator does things that the house would do at a casino
-# For example, the simulator (house) would get the decks together to be used in a game
-# Anything that happens in the game though, won't happen here
+
+
 class Simulator:
+    """
+    Simulates games of Blackjack, played out based on the set configuration.
+    Everything about a game of Blackjack is simulated from how the shoe is put together
+    to each player's betting and card counting strategy.
+    Each individual hand of Blackjack is played out in the Game class.
+    """
 
     def __init__(self):
-        self.number_of_games = config.simulator_settings['number_of_games']
-        number_of_decks = config.game_settings['number_of_decks']
-        self.shoe = Shoe(number_of_decks)
+        self.number_of_games = 0
+        self.number_of_decks = 0
+        self.number_of_players = 0
+        self.shoe = None
         self.discard_pile = DiscardPile()
         self.house_rules = HouseRules()
-
-        # Add each deck to the shoe
-        for deck_count in range(number_of_decks):
-            self.shoe.add_deck(Deck())
-        # Shuffle shoe or decks?
-        # May want to move this to the start game function
-        self.shoe.shuffle()
-
-        # Load in rules and give them to each player
-        player_strategy = PlayerStrategy()
-        # Players at the table (will be used for every game)
         self.players = []
-        for player_count in range(config.game_settings['number_of_players']):
-            self.players.append(Player(player_strategy, player_count+1, self.house_rules))
+        self.dealer = None
 
-        # Create dealer and give them the shoe
-        self.dealer = Dealer(self.shoe, self.discard_pile)
-
+    # Public
 
     def run_simulation(self):
+        self.set_up_simulator()
+        self.create_shoe()
+        self.create_dealer()
+        self.create_players()
+        # Plays all the games of Blackjack
         for i in range(self.number_of_games):
             game = Game(self.shoe, self.discard_pile, self.dealer, self.players)
             game.play_game()
@@ -55,13 +51,62 @@ class Simulator:
         print("DEALER:")
         self.dealer.print_winnings()
 
+    # Private
+    def set_up_simulator(self):
+        """Loads in the simulator config and sets up the sim based on those settings"""
+        self.log_config()
+        self.number_of_games = config.simulator_settings['number_of_games']
+        self.number_of_decks = config.game_settings['number_of_decks']
+        self.number_of_players = config.game_settings['number_of_players']
+
+    def create_dealer(self):
+        """Create dealer and give them the shoe"""
+        self.dealer = Dealer(self.shoe, self.discard_pile)
+
+    def create_shoe(self):
+        """Creates each card in the shoe and shuffles it"""
+        self.shoe = Shoe(self.number_of_decks)
+        # Add each deck to the shoe
+        for deck_count in range(self.number_of_decks):
+            self.shoe.add_deck(Deck())
+        # Shuffle shoe or decks?
+        # May want to move this to the start game function
+        self.shoe.shuffle()
+
+    def create_players(self):
+        """Creates each player for the sim and sets their playing strategies"""
+        # Load in rules and give them to each player
+        player_strategy = PlayerStrategy()
+        # Players at the table (will be used for every game)
+        for player_count in range(self.number_of_players):
+            self.players.append(Player(player_strategy, player_count + 1, self.house_rules))
+
+    def log_config(self):
+        simulator_settings = config.simulator_settings
+        game_settings = config.game_settings
+        config_string = f"Simulator Configuration\n" \
+                        f"----------------------------------------------\n" \
+                        f"Simulator:\n" \
+                        f"  Games being played: {simulator_settings['number_of_games']}\n" \
+                        f"Gameplay:\n" \
+                        f"  Number of decks: {game_settings['number_of_decks']}\n" \
+                        f"  Number of players: {game_settings['number_of_players']}\n" \
+                        f"  Player loses against Blackjack: {game_settings['player_bj_bet']}\n" \
+                        f"  Shoe insert: {game_settings['shoe_insert']}\n" \
+                        f"  Allow double down: {game_settings['allow_dd_on_total']}\n" \
+                        f"  Double down ace is one: {game_settings['dd_ace_is_one']}\n" \
+                        f"  Double down after: {game_settings['dd_after_amount_delt']}\n" \
+                        f"  Double down split: {game_settings['dd_after_split']}\n" \
+                        f"  Double down again: {game_settings['redouble']}\n" \
+                        f"  Double down discard: {game_settings['discard_dd']}\n" \
+                        f"  Double down hit: {game_settings['dd_hit']}\n"
+        print(config_string)
 
 
 # print(str(games_played) + " games played")
 # print(str(double_down) + " double down")
 # print(str(split) + " split")
 # print(str(hit) + " hit")
-
 
 
 # if players first two cards are ace and facecard then blackjack and dealer does not have blackjack then player gets 1.5 bet

@@ -1,6 +1,8 @@
 from Hand import Hand
 from Card import Card
 import config
+
+
 class Dealer:
 
     def __init__(self, shoe, discard_pile):
@@ -12,8 +14,8 @@ class Dealer:
         self.money_lost = 0
         self.money_won = 0
 
-    # Deal 2 cards to each player and the dealer
     def deal_cards(self, players):
+        """Deals 2 cards to each player and the dealer"""
         for i in range(2):
             for player in players:
                 self.deal_card_to_player(player, 0)
@@ -33,8 +35,8 @@ class Dealer:
         card = self.shoe.remove_card()
         self.add_card_to_hand(card)
 
-    # If there are less than 60 cards in shoe then add the discard pile back to shoe and shuffle the shoe
     def add_discard_to_shoe(self):
+        # If there are less than 60 cards in shoe then add the discard pile back to shoe and shuffle the shoe
         cards = self.discard_pile.get_cards()
         self.discard_pile.clear()
         self.shoe.add_cards(cards)
@@ -72,6 +74,7 @@ class Dealer:
         if self.hand.get_hand_total() == 21 and len(self.hand.cards) == 2:
             return True
         return False
+
     def has_twenty_one(self):
         if self.hand.get_hand_total() == 21:
             return True

@@ -1,22 +1,22 @@
 import config
 import json
 
+
 class PlayerStrategy:
 
     def __init__(self):
-        self.hard_rules = {} # 1 - 16 (20, 1): 'S'
-        self.soft_rules = {} # 17 - 25
-        self.pair_rules = {} # 26 - 35
-        self.file_name = config.player_settings['play_rules'] # csv file that holds the player's set of rules (strategy)
+        self.hard_rules = {}  # 1 - 16 (20, 1): 'S'
+        self.soft_rules = {}  # 17 - 25
+        self.pair_rules = {}  # 26 - 35
+        # csv file that holds the player's set of rules (strategy)
+        self.file_name = config.player_settings['play_rules']
         self.read_rules_file()
 
     def read_rules_file(self):
         with open(self.file_name, "r") as read_file:
             data = json.load(read_file)
 
-
-        # Fill in hard total rules
-
+        # Fill in hand total rules
         for hand_total_type in data: # hard, soft, pair
             for hand_total in data[hand_total_type].keys(): # 21-5, 10-2, 10-1
                 for dealer_up_card in data[hand_total_type][hand_total].keys(): #'21': 'A' or '21': '2'

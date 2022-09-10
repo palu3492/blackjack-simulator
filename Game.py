@@ -1,8 +1,10 @@
 from Player import Player
 import config
 
-# Represents an individual game at a casino table
+
 class Game:
+
+    """Represents an individual game at a casino table"""
 
     def __init__(self, shoe, discard, dealer, players):
         self.shoe = shoe

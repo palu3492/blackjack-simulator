@@ -22,7 +22,7 @@ class Hand:
     #     return self.cards_value
 
     def get_hand_total(self):
-        # Adds up card values and returns hard total or soft total if ace and not over 21
+        """Adds up card values and returns hard total or soft total if ace and not over 21"""
         total = 0
         ace = False
         for card in self.cards:
@@ -53,7 +53,7 @@ class Hand:
         return self.bust
 
     def set_cards(self, cards):
-        # Set hand cards to array of cards
+        """Set hand cards to array of cards"""
         self.cards = cards
 
     def get_cards(self):
@@ -85,6 +85,7 @@ class Hand:
         if self.get_hand_total() == 21 and len(self.cards) == 2:
             return True
         return False
+
     def is_twenty_one(self):
         if self.get_hand_total() == 21:
             return True
